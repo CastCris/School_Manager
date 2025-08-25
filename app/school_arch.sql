@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS Person(
 
 CREATE TABLE IF NOT EXISTS Phone(
     CPF     CHAR(12),
-    Digits  VARCHAR(20) NOT NULL,
+    Digits  VARCHAR(20) NOT NULL UNIQUE,
 
     --
     CONSTRAINT FK_CPF
@@ -65,9 +65,11 @@ CREATE TABLE IF NOT EXISTS Task_niche(
     ID_Site     CHAR(20),
 
     Niche_name  VARCHAR(81) NOT NULL,
+    Niche_time  VARCHAR(12) NOT NULL,
 
     CONSTRAINT FK_ID_Site
-        FOREIGN KEY(ID_Site) REFERENCES Site(ID)
+        FOREIGN KEY(ID_Site) REFERENCES Site(ID),
+
 );
 
 
