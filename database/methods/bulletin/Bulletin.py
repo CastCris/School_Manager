@@ -1,4 +1,4 @@
-from database import Base
+from database.session import Base
 
 ##
 class Bulletin(Base):

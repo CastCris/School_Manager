@@ -1,22 +1,20 @@
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
-# from begin.globals import MASTER_KEY
+from begin.globals.Token import KEY_MASTER
+# from begin.globals import KEY_MASTER
 
 import base64
 import os
 
-MASTER_KEY = AESGCM.generate_key(bit_length=256)
-
 ##
-def dek_encrypt(dek:bytes, key:bytes=MASTER_KEY)->str:
+def dek_encrypt(dek:bytes, key:bytes=KEY_MASTER)->str:
     aesgcm = AESGCM(key)
 
     nonce = os.urandom(12)
     ciphertext = aesgcm.encrypt(nonce, dek, None)
-    print('cipher: ', ciphertext)
 
     return base64.b64encode(nonce + ciphertext).decode()
 
-def dek_decrypt(dek:str, key:bytes=MASTER_KEY)->bytes:
+def dek_decrypt(dek:str, key:bytes=KEY_MASTER)->bytes:
     aesgcm = AESGCM(key)
     data = base64.b64decode(dek)
 

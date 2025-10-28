@@ -5,6 +5,8 @@ from sqlalchemy.ext.declarative import declarative_base
 
 from begin.globals import Message
 
+from .methods.crypt import *
+
 import re
 
 ##
@@ -34,20 +36,21 @@ def reset(engine:object)->None:
 
         connection.execute(sql)
 
-    file.close()
+    # file.close()
 
 
 ##
 engine = create_engine('mariadb://school:@localhost/schoolDB', echo=True)
+reset(engine)
 
 metadata = MetaData()
 metadata.reflect(bind=engine)
-
 Base = declarative_base(metadata=metadata)
 
-Session = sessionmaker()
+Session = sessionmaker(bind=engine)
 session = Session()
 
+#
 FIELD_CIPHER = lambda model: [ i for i in model.__dict__.keys() if re.search("^cipher_*.", i)]
 FIELD_HASHED = lambda model: [ i for i in model.__dict__.keys() if re.search("^hashed_*.", i)]
 
@@ -65,34 +68,9 @@ op_comps = {
 
 def session_insert(model:object, **kwargs)->object|None:
     try:
-        field_cipher = getattr(model, "FIELD_CIPHER", [])
-        field_hasehd = getattr(model, "FIELD_HASEHD", [])
-
-        kwargs_miss = {}
-        if not "dek" in kwargs.keys() and "dek" in model.__dict__.keys():
-            kwargs_miss["dek"] = key_crypt(AESGCM.generate_key(bit_length=256))
-
-        for i in field_cipher:
-            dek = key_decrypt(kwargs["dek"])
-            attr_name = i.split('cipher_')[0]
-
-            if not attr_name in kwargs.keys():
-                continue
-
-            kwargs_miss[f"cipher_{attr_name}"] = clm_encrypt(kwargs[attr_name], dek)
-
-        for i in field_hashed:
-            dek = key_decrypt(kwargs["dek"])
-            attr_name = i.split('hashed_')[0]
-
-            if not attr_name in kwargs.keys():
-                continue
-
-            kwargs_miss[f"hashed_{attr_name}"] = clm_encrypt(kwargs[attr_name], dek)
-
-        ##
-        instance = model(**kwargs, **kwargs_miss)
+        instance = model_create(model, **kwargs)
         session.add(instance)
+        session.commit()
 
         return instance
     
@@ -132,7 +110,7 @@ def session_get(model:object, **kwargs)->tuple|None:
             if '__' in i:
                 column_name, op_name = i.split('__')
 
-            op = op_cmp[op_name]
+            op = op_comps[op_name]
             column = getattr(model, column_name, None)
 
             filters.append(op(column, kwargs[i]))
@@ -147,32 +125,92 @@ def session_get(model:object, **kwargs)->tuple|None:
         return None
 
 
+def model_create(model:object, **kwargs)->object|None:
+    from begin.globals import Token
+
+    ##
+    try:
+        field_cipher = FIELD_CIPHER(model)
+        field_hashed = FIELD_HASHED(model)
+
+        kwargs_miss = {}
+        if not "dek" in kwargs.keys() and "dek" in model.__dict__.keys():
+            kwargs_miss["dek"] = dek_encrypt(AESGCM.generate_key(bit_length=256))
+
+
+        for i in field_cipher:
+            dek = dek_decrypt(kwargs_miss["dek"])
+            _, attr_name = i.split('cipher_')
+            key_name = f"cipher_{attr_name}"
+
+            if not attr_name in kwargs.keys():
+                continue
+            if key_name in kwargs.keys():
+                continue
+
+            value = kwargs[attr_name]
+            kwargs_miss[key_name] = clm_encrypt(value, dek)
+
+        for i in field_hashed:
+            _, attr_name = i.split('hashed_')
+            key_name = f"hashed_{attr_name}"
+
+            if not attr_name in kwargs.keys():
+                continue
+            if key_name in kwargs.keys():
+                continue
+
+            value = kwargs[attr_name]
+            kwargs_miss[key_name] = Token.crypt_sha256(value)
+
+        kwargs_copy = kwargs.copy()
+        for i in list(kwargs_copy):
+            if i in model.__dict__.keys():
+                continue
+
+            del kwargs_copy[i]
+
+        ##
+        print(kwargs_copy, kwargs_miss)
+        instance = model(**kwargs_copy, **kwargs_miss)
+        return instance
+
+    except Exception as e:
+        Message.error('model_create', e)
+
 def model_update(instance:object, **kwargs)->None:
     from begin.globals import Token
 
     ##
     try:
-        model = type(instance, (instance.__class__, ), {})
+        model = type("Model", (instance.__class__, ), {})
 
-        field_cipher = getattr(model, "FIELD_CIPHER", [])
-        field_hashed = getattr(model, "FIELD_HASHED", [])
+        field_cipher = FIELD_CIPHER(model)
+        field_hashed = FIELD_HASHED(model)
 
         kwargs_copy = kwargs.copy()
 
-        for i in kwargs.values():
-            dek_cryptted = getattr(instance, "dek", None)
-            if dek_cryptted is None:
+        for i in field_cipher:
+            dek_crypted = getattr(instance, "dek", None)
+            if dek_crypted is None:
+                break
+
+            dek = dek_decrypt(instance.dek)
+
+            if not i in kwargs_copy.keys():
                 continue
 
-            dek = key_decrypt(instance.dek)
+            kwargs_copy[i] = clm_crypted(kwargs[i], dek)
 
-            if i in field_cipher:
-                kwargs_copy[i] = clm_encrypt(kwargs[i], dek)
+        for i in field_hashed:
+            print(i)
+            if not i in kwargs_copy.keys():
+                continue
 
-            elif i in field_hashed:
-                kwargs_copy[i] = Token.crypt_sha256(kwargs[i])
+            kwargs_copy[i] = Token.crypt_sha256(kwargs[i])
 
-        for i in kwargs_copy.values():
+        print(kwargs_copy)
+        for i in kwargs_copy.keys():
             setattr(instance, i, kwargs_copy[i])
 
         session.commit()
@@ -180,3 +218,38 @@ def model_update(instance:object, **kwargs)->None:
     except Exception as e:
         Message.error('model_update', e)
         session.rollback()
+
+def model_get(instance:object, *args)->tuple|None:
+    from begin.globals import Token
+
+    ##
+    try:
+        model = type("Model", (instance.__class__, ), {})
+
+        field_cipher = FIELD_CIPHER(model)
+        field_hashed = FIELD_HASHED(model)
+
+        items = []
+        for i in args:
+            dek_encrypt = getattr(instance, "dek", None)
+            value = getattr(instance, i, None)
+
+            if dek_encrypt is None:
+                items.append(value)
+                continue
+
+            dek = dek_decrypt(instance.dek)
+
+            if i in field_cipher:
+                items.append(clm_decrypt(value, dek))
+                continue
+
+            items.append(value)
+
+        return tuple(items)
+
+    except Exception as e:
+        Message.error('model_get', e)
+        session.rollback()
+
+        return None

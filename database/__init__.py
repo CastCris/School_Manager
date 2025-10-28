@@ -1,3 +1,3 @@
-from .session import *
-
 from .methods import *
+
+from .session import *
