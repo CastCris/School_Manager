@@ -1,6 +1,4 @@
 from database import Base
 
-student = Base.classes.Student
-
-class Student(student):
-    pass
+class Student(Base):
+    __tablename__ = 'Student'

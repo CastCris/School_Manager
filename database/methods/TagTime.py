@@ -1,7 +1,5 @@
 from database import Base
 
 ##
-tagtime = Base.classes.TagTime
-
-class TagTime(tagtime):
-    pass
+class TagTime(Base):
+    __tablename__ = 'TagTime'
