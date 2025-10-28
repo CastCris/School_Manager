@@ -3,7 +3,7 @@ CREATE TABLE `LocalWork`(
     `hashed_id` CHAR(255) NOT NULL,
     `hashed_name` CHAR(255) NOT NULL,
     `cipher_id` CHAR(255) NOT NULL,
-    `cipher_mame` VARCHAR(255) NOT NULL,
+    `cipher_name` VARCHAR(255) NOT NULL,
     PRIMARY KEY(`hashed_id`)
 );
 ALTER TABLE
@@ -94,13 +94,19 @@ ALTER TABLE
 ALTER TABLE
     `Agreement` ADD INDEX `agreement_tagtime_id_index`(`TagTime_id`);
 CREATE TABLE `Task`(
+    `dek` CHAR(255) NOT NULL,
+    `hashed_id` CHAR(255) NOT NULL,
     `TaskNiche_id` CHAR(255) NOT NULL,
-    `Agreeement_id` CHAR(255) NOT NULL,
-    PRIMARY KEY(
-        `TaskNiche_id`,
-        `Agreeement_id`
-    )
+    `Agreement_id` CHAR(255) NOT NULL,
+    `cipher_id` CHAR(255) NOT NULL,
+    PRIMARY KEY(`hashed_id`)
 );
+ALTER TABLE
+    `Task` ADD INDEX `task_taskniche_id_agreement_id_index`(`TaskNiche_id`, `Agreement_id`);
+ALTER TABLE
+    `Task` ADD UNIQUE `task_taskniche_id_unique`(`TaskNiche_id`);
+ALTER TABLE
+    `Task` ADD UNIQUE `task_agreement_id_unique`(`Agreement_id`);
 CREATE TABLE `TaskNiche`(
     `dek` CHAR(255) NOT NULL,
     `hashed_id` CHAR(255) NOT NULL,
@@ -150,7 +156,7 @@ CREATE TABLE `Course`(
     `hashed_id` CHAR(255) NOT NULL,
     `hashed_name` VARCHAR(255) NOT NULL,
     `TagTime_id` CHAR(255) NOT NULL,
-    `cipher_id` BIGINT NOT NULL,
+    `cipher_id` CHAR(255) NOT NULL,
     `cipher_name` VARCHAR(255) NOT NULL,
     PRIMARY KEY(`hashed_id`)
 );
@@ -161,7 +167,7 @@ ALTER TABLE
 ALTER TABLE
     `TaskNiche` ADD CONSTRAINT `taskniche_tagtime_id_foreign` FOREIGN KEY(`TagTime_id`) REFERENCES `TagTime`(`id`);
 ALTER TABLE
-    `Task` ADD CONSTRAINT `task_agreeement_id_foreign` FOREIGN KEY(`Agreeement_id`) REFERENCES `Agreement`(`hashed_id`);
+    `Task` ADD CONSTRAINT `task_agreement_id_foreign` FOREIGN KEY(`Agreement_id`) REFERENCES `Agreement`(`hashed_id`);
 ALTER TABLE
     `Course` ADD CONSTRAINT `course_tagtime_id_foreign` FOREIGN KEY(`TagTime_id`) REFERENCES `TagTime`(`id`);
 ALTER TABLE
