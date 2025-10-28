@@ -79,11 +79,12 @@ ALTER TABLE
 CREATE TABLE `Agreement`(
     `dek` CHAR(255) NOT NULL,
     `hashed_id` CHAR(255) NOT NULL,
+    `hasehd_termPath` BIGINT NOT NULL,
     `Departament_id` CHAR(255) NOT NULL,
     `Register_id` CHAR(255) NOT NULL,
     `TagTime_id` CHAR(255) NOT NULL,
     `cipher_id` CHAR(255) NOT NULL,
-    `term_path` VARCHAR(255) NULL,
+    `cipher_termPath` VARCHAR(255) NULL,
     `type` INT NOT NULL,
     PRIMARY KEY(`hashed_id`)
 );
@@ -125,21 +126,27 @@ ALTER TABLE
 ALTER TABLE
     `TaskNiche` ADD INDEX `taskniche_tagtime_id_index`(`TagTime_id`);
 CREATE TABLE `TagTime`(
-    `id` CHAR(255) NOT NULL,
+    `dek` CHAR(255) NOT NULL,
+    `hashed_id` CHAR(255) NOT NULL,
+    `hashed_name` CHAR(255) NOT NULL,
+    `cipher_id` CHAR(255) NOT NULL,
+    `cipher_name` VARCHAR(255) NOT NULL,
     `time_init` TIMESTAMP NOT NULL,
     `time_end` TIMESTAMP NOT NULL,
-    PRIMARY KEY(`id`)
+    PRIMARY KEY(`hashed_id`)
 );
 CREATE TABLE `Bulletin`(
     `Agreement_id` CHAR(255) NOT NULL,
-    `GeneralBulletin_id` CHAR(255) NOT NULL,
+    `BulletinGeneral_id` CHAR(255) NOT NULL,
     `grade` INT NOT NULL,
     `status` INT NOT NULL,
-    PRIMARY KEY(
-        `Agreement_id`,
-        `GeneralBulletin_id`
-    )
+    PRIMARY KEY(`Agreement_id`)
 );
+ALTER TABLE
+    `Bulletin` ADD INDEX `bulletin_agreement_id_bulletingeneral_id_index`(
+        `Agreement_id`,
+        `BulletinGeneral_id`
+    );
 CREATE TABLE `BulletinGeneral`(
     `dek` CHAR(255) NOT NULL,
     `hashed_id` CHAR(255) NOT NULL,
@@ -165,11 +172,11 @@ ALTER TABLE
 ALTER TABLE
     `Departament_LocalWork` ADD CONSTRAINT `departament_localwork_departament_id_foreign` FOREIGN KEY(`Departament_id`) REFERENCES `Departament`(`hashed_id`);
 ALTER TABLE
-    `TaskNiche` ADD CONSTRAINT `taskniche_tagtime_id_foreign` FOREIGN KEY(`TagTime_id`) REFERENCES `TagTime`(`id`);
+    `TaskNiche` ADD CONSTRAINT `taskniche_tagtime_id_foreign` FOREIGN KEY(`TagTime_id`) REFERENCES `TagTime`(`hashed_id`);
 ALTER TABLE
     `Task` ADD CONSTRAINT `task_agreement_id_foreign` FOREIGN KEY(`Agreement_id`) REFERENCES `Agreement`(`hashed_id`);
 ALTER TABLE
-    `Course` ADD CONSTRAINT `course_tagtime_id_foreign` FOREIGN KEY(`TagTime_id`) REFERENCES `TagTime`(`id`);
+    `Course` ADD CONSTRAINT `course_tagtime_id_foreign` FOREIGN KEY(`TagTime_id`) REFERENCES `TagTime`(`hashed_id`);
 ALTER TABLE
     `Person` ADD CONSTRAINT `person_register_id_foreign` FOREIGN KEY(`Register_id`) REFERENCES `Register`(`hashed_id`);
 ALTER TABLE
@@ -181,7 +188,7 @@ ALTER TABLE
 ALTER TABLE
     `TaskNiche` ADD CONSTRAINT `taskniche_departament_id_foreign` FOREIGN KEY(`Departament_id`) REFERENCES `Departament_LocalWork`(`Departament_id`);
 ALTER TABLE
-    `Bulletin` ADD CONSTRAINT `bulletin_generalbulletin_id_foreign` FOREIGN KEY(`GeneralBulletin_id`) REFERENCES `BulletinGeneral`(`hashed_id`);
+    `Bulletin` ADD CONSTRAINT `bulletin_bulletingeneral_id_foreign` FOREIGN KEY(`BulletinGeneral_id`) REFERENCES `BulletinGeneral`(`hashed_id`);
 ALTER TABLE
     `BulletinGeneral` ADD CONSTRAINT `bulletingeneral_student_id_foreign` FOREIGN KEY(`Student_id`) REFERENCES `Student`(`Register_id`);
 ALTER TABLE
@@ -189,7 +196,7 @@ ALTER TABLE
 ALTER TABLE
     `Agreement` ADD CONSTRAINT `agreement_departament_id_foreign` FOREIGN KEY(`Departament_id`) REFERENCES `Departament_LocalWork`(`Departament_id`);
 ALTER TABLE
-    `Agreement` ADD CONSTRAINT `agreement_tagtime_id_foreign` FOREIGN KEY(`TagTime_id`) REFERENCES `TagTime`(`id`);
+    `Agreement` ADD CONSTRAINT `agreement_tagtime_id_foreign` FOREIGN KEY(`TagTime_id`) REFERENCES `TagTime`(`hashed_id`);
 ALTER TABLE
     `Student` ADD CONSTRAINT `student_register_id_foreign` FOREIGN KEY(`Register_id`) REFERENCES `Register`(`hashed_id`);
 ALTER TABLE
