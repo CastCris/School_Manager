@@ -16,6 +16,7 @@ def reset(engine:object)->None:
 
     with engine.connect() as connection:
         inspector = inspect(connection)
+        # print(inspector.get_table_names())
         for i in inspector.get_table_names():
             foreignKeys_dependded_command = f" \
                 SELECT CONCAT('ALTER TABLE ', TABLE_NAME, ' DROP FOREIGN KEY ', CONSTRAINT_NAME, ';') \
@@ -35,10 +36,8 @@ def reset(engine:object)->None:
             connection.commit()
 
         connection.execute(sql)
-
-    # file.close()
-
-
+        connection.commit()
+    
 ##
 engine = create_engine('mariadb://school:@localhost/schoolDB', echo=True)
 reset(engine)
@@ -113,6 +112,9 @@ def session_get(model:object, **kwargs)->tuple|None:
             op = op_comps[op_name]
             column = getattr(model, column_name, None)
 
+            if column is None:
+                print(f"Column {i} doesn't exist in table {model.__tablename__}")
+
             filters.append(op(column, kwargs[i]))
 
         query = session.query(model).filter(*filters).all()
@@ -171,7 +173,7 @@ def model_create(model:object, **kwargs)->object|None:
             del kwargs_copy[i]
 
         ##
-        print(kwargs_copy, kwargs_miss)
+        # print(kwargs_copy, kwargs_miss)
         instance = model(**kwargs_copy, **kwargs_miss)
         return instance
 
@@ -196,18 +198,26 @@ def model_update(instance:object, **kwargs)->None:
                 break
 
             dek = dek_decrypt(instance.dek)
+            _, attr_name = i.split('cipher_')
 
-            if not i in kwargs_copy.keys():
+            if not attr_name in kwargs_copy.keys() and not i in kwargs_copy.keys():
                 continue
 
-            kwargs_copy[i] = clm_crypted(kwargs[i], dek)
+            if attr_name in kwargs_copy.keys():
+                kwargs_copy[i] = clm_encrypt(kwargs[attr_name], dek)
+            elif i in kwargs_copy.keys():
+                kwargs_copy[i] = clm_encrypt(kwargs[i], dek)
 
         for i in field_hashed:
-            print(i)
-            if not i in kwargs_copy.keys():
+            _, attr_name = i.split('hashed_')
+
+            if not attr_name in kwargs_copy.keys() and not i in kwargs_copy.keys():
                 continue
 
-            kwargs_copy[i] = Token.crypt_sha256(kwargs[i])
+            if attr_name in kwargs_copy.keys():
+                kwargs_copy[i] = Token.crypt_sha256(kwargs[attr_name])
+            elif i in kwargs_copy.keys():
+                kwargs_copy[i] = Token.crypt_sha256(kwargs[i])
 
         print(kwargs_copy)
         for i in kwargs_copy.keys():
@@ -234,19 +244,21 @@ def model_get(instance:object, *args)->tuple|None:
             dek_encrypt = getattr(instance, "dek", None)
             value = getattr(instance, i, None)
 
+            if value is None:
+                continue
+
             if dek_encrypt is None:
                 items.append(value)
                 continue
 
-            dek = dek_decrypt(instance.dek)
-
+            dek = dek_decrypt(dek_encrypt)
             if i in field_cipher:
-                items.append(clm_decrypt(value, dek))
-                continue
+                value = clm_decrypt(value, dek)
 
             items.append(value)
 
-        return tuple(items)
+        # print(items)
+        return items
 
     except Exception as e:
         Message.error('model_get', e)
