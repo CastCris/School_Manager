@@ -99,7 +99,7 @@ def session_update(instances:tuple, **kwargs)->None:
         Message.error('session_update', e)
         session.rollback()
 
-def session_get(model:object, **kwargs)->tuple|None:
+def session_query(model:object, **kwargs)->tuple|None:
     try:
         filters = []
 
@@ -139,8 +139,15 @@ def model_create(model:object, **kwargs)->object|None:
         if not "dek" in kwargs.keys() and "dek" in model.__dict__.keys():
             kwargs_miss["dek"] = dek_encrypt(AESGCM.generate_key(bit_length=256))
 
+        if "dek" in kwargs.keys():
+            kargs_miss["dek"] = dek_encrypt(kwargs["dek"])
+
 
         for i in field_cipher:
+            dek_crypt = kwargs_miss.get("dek", None)
+            if dek_crypt is None:
+                break
+
             dek = dek_decrypt(kwargs_miss["dek"])
             _, attr_name = i.split('cipher_')
             key_name = f"cipher_{attr_name}"
@@ -241,17 +248,17 @@ def model_get(instance:object, *args)->tuple|None:
 
         items = []
         for i in args:
-            dek_encrypt = getattr(instance, "dek", None)
+            dek_crypt = getattr(instance, "dek", None)
             value = getattr(instance, i, None)
 
             if value is None:
                 continue
 
-            if dek_encrypt is None:
+            if dek_crypt is None:
                 items.append(value)
                 continue
 
-            dek = dek_decrypt(dek_encrypt)
+            dek = dek_decrypt(dek_crypt)
             if i in field_cipher:
                 value = clm_decrypt(value, dek)
 
