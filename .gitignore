@@ -3,6 +3,7 @@
 
 !*.py
 !README.md
+!requirements.txt
 
 #
 !/database/**/*.sql
