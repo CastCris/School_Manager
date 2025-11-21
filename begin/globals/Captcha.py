@@ -4,7 +4,7 @@ class Captcha():
         self.width = kwargs.get("width", 500)
         self.height = kwargs.get("height", 150)
 
-        self.font = kwargs.get("font", ["../../static/fonts/Josefin_Sans/JosefinSans-VariableFont_wght.ttf"])
+        self.font = kwargs.get("font", ["./static/fonts/Josefin_Sans/JosefinSans-VariableFont_wght.ttf"])
         self.font_lengthMin = kwargs.get("font_lengthMin", 60)
         self.font_lengthMax = kwargs.get("font_lengthMax", 73)
         
@@ -140,6 +140,7 @@ class Captcha():
 
         return img_lined.convert("RGB")
 
+"""
 
 import secrets
 import string
@@ -152,3 +153,5 @@ instance = Captcha()
 captcha = instance.generate(code)
 
 captcha.show()
+
+"""

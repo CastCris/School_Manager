@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}{% endblock %}</title>
+
+    <link rel="stylesheet" href="{{ url_for("static", filename="style/fonts.css") }}">
+    <link rel="stylesheet" href="{{ url_for("static", filename="style/layouts/layout_1.css") }}">
+
+    {% block system_style %}{% endblock %}
+    {% block system_javascript %}{% endblock %}
+
+    {% block page_style %}{% endblock %}
+    {% block page_javascript %}{% endblock %}
+     
+</head>
+<body>
+    <div id="message_logs" class="animation_sliding"></div>
+
+    <header>
+    </header>
+
+    {% block content %}
+        <main>
+            {% block content_main %}{% endblock %}
+        </main>
+    {% endblock %}
+</body>
+</html>

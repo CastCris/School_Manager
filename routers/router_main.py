@@ -1,8 +1,11 @@
 from begin.xtensions import flask
 
 ##
-def register(app:object)->None:
+def register_app(app:object)->None:
 
     @app.route('/')
     def index()->object:
-        return 'Hello World!'
+        if "user_name" in flask.request.cookies.keys():
+            return "Hello!"
+
+        return flask.redirect("/view/login")

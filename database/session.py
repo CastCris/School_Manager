@@ -3,7 +3,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.ext.declarative import declarative_base
 
-from begin.globals import Message
+from begin.globals import Messages
 
 from .methods.crypt import *
 
