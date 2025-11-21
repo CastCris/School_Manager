@@ -5,8 +5,8 @@ class Captcha():
         self.height = kwargs.get("height", 150)
 
         self.font = kwargs.get("font", ["../../static/fonts/Josefin_Sans/JosefinSans-VariableFont_wght.ttf"])
-        self.font_lengthMin = kwargs.get("font_lengthMin", 45)
-        self.font_lengthMax = kwargs.get("font_lengthMax", 55)
+        self.font_lengthMin = kwargs.get("font_lengthMin", 60)
+        self.font_lengthMax = kwargs.get("font_lengthMax", 73)
         
         self.wrap_amplitude = kwargs.get("wrap_amplitude", 5)
         self.wrap_waveLength = kwargs.get("wrap_waveLength", 60)
