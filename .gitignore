@@ -9,7 +9,8 @@
 !/database/**/*.sql
 !/database/**/*.brM3
 
-!/static/script/**/*.js
+!/static/fonts/**/*.ttf
+!/static/scripts/**/*.js
 !/static/style/**/*.css
 
 !/templates/**/*.html
