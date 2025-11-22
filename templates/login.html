@@ -11,14 +11,14 @@
 <form id="login_form_credentials">
     <div class="user_data_input">
         <label>
-            <h3>User Name</h3>
+            <h3>User CPF</h3>
         </label>
-        <input type="text" autocomplete="off" name="user_name">
+        <input type="text" autocomplete="off" name="user_name" required>
 
         <label>
             <h3>User Password</h3>
         </label>
-        <input type="text" autocomplete="off" name="user_password">
+        <input type="text" autocomplete="off" name="user_password" required>
 
     </div>
 
@@ -31,15 +31,17 @@
         <label>
             <h3>Captcha</h3>
         </label>
-
         <img id="login_image_captcha">
+
         <button id="login_image_captcha_get">
             <h3>Get captcha</h3>
         </button>
 
-        <input type="text" autocomplete="off" name="captcha">
-
+        <!-- -->
+        <input type="text" autocomplete="off" name="user_captcha" required>
     </div>
+
+    <button id="login_form_finish">Finish!</button>
 
 </form>
 {% endblock %}

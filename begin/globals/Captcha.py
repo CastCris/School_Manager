@@ -1,5 +1,5 @@
 
-class Captcha():
+class Image():
     def __init__(self, **kwargs)->None:
         self.width = kwargs.get("width", 500)
         self.height = kwargs.get("height", 150)
@@ -35,7 +35,7 @@ class Captcha():
         for i in txt:
             font_path = random.choice(self.font)
             font_size = random.randint(self.font_lengthMin, self.font_lengthMax)
-            print(font_path)
+            # print(font_path)
             font = ImageFont.truetype(font=font_path, size=font_size)
 
             #

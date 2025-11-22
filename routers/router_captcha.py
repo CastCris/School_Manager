@@ -9,7 +9,7 @@ def register_app(app:object)->None:
         from io import BytesIO
 
         ##
-        captcha_instance = Captcha()
+        captcha_instance = Captcha.Image()
         captcha_token = Token.code_captcha()
         captcha_img = captcha_instance.generate(captcha_token)
 

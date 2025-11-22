@@ -1,5 +1,41 @@
-// Layouts / CSS
-export class Layout_1{
+//
+export function forms_validation(...forms){
+    const logs = new MessageLogs();
+    const formData = new FormData();
+
+    for(const i of forms){
+        const form_data = new FormData(i);
+        const fields_required =  document.querySelectorAll(`#${i.id} [required]`) || [];
+        // console.log(form_data, fields_required);
+
+        for(const j of fields_required){
+            const field = form_data.get(j.name)
+            const field_type = typeof field;
+
+            if(field_type == "string" && field.trim())
+                continue;
+
+            if(field_type == "object" && field instanceof File && field.size)
+                continue;
+
+            logs.CLEAN();
+            logs.ADD(logs.MESSAGE_ERROR_CLASS, "Please, fill all required fields");
+
+            j.focus()
+
+            return null;
+        }
+
+        form_data.forEach((value, key) => {
+            formData.append(key, value);
+        });
+    }
+
+    return formData;
+}
+
+// Layouts / Message 
+class Layout_1{
     constructor(){
         this.TAGS_NAMES = [ ...(document.getElementsByTagName("*")) ];
 
@@ -91,6 +127,29 @@ export class Layout_1{
     }
 }
 
+export class MessageLogs{
+    constructor(){
+        const page_layout = new Layout_1();
+        const ELEMENT_BY_ID = page_layout.ELEMENT_BY_ID;
+
+        //
+        this.BOX = ELEMENT_BY_ID["message_logs"];
+
+        this.MESSAGE_ERROR_CLASS = 'message_error';
+
+        //
+        this.CLEAN = () => {
+            this.BOX.innerHTML = '';
+        };
+
+        this.ADD = (message_class, message) => {
+            this.BOX.innerHTML += `
+                <p class="${message_class}">${message}</p>
+        `
+        };
+    }
+}
+
 // EventListenr | Element | Page
 class EventListener {
     constructor(args) {
@@ -125,13 +184,17 @@ class Element {
     init(){
         this.OBJECT = document.getElementById(this.ID);
         for(const i of this.EVENT_LISTENERS){
-            console.log(i, this.OBJECT);
+            // console.log(i, this.OBJECT);
             this.OBJECT.addEventListener(i.type, i.func)
         }
     }
 
     set(field_name, field_value){
         this.OBJECT[field_name] = field_value;
+    }
+
+    get(){
+        return this.OBJECT;
     }
 }
 
@@ -169,6 +232,9 @@ export class Login extends Page{
         });
         this.BUTT_CAPTCHA_GET = new Element({
             id:"login_image_captcha_get"
+        });
+        this.BUTT_FORM_FINISH = new Element({
+            id:"login_form_finish"
         });
     }
 }

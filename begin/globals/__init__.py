@@ -1,9 +1,8 @@
-from  .Config import *
+from .Config import Config
 
-from  .Captcha import *
-from  .Cookie import *
+from . import Captcha
 
-from  .Messages import *
-
-from  .Router import *
-from  .Token import *
+from . import Cookie
+from . import Messages
+from . import Router
+from . import Token
