@@ -60,3 +60,14 @@ login.BUTT_FORM_FINISH.addEventListener('click', async (e) => {
         logs.ADD(message["type"], message["content"]);
     });
 })
+
+//
+fetch('/captcha/generate')
+.then(response => response.blob())
+.then(blob => {
+    const img_url = URL.createObjectURL(blob);
+    // console.log(img_url);
+    // console.log(login.IMG_CAPTCHA);
+
+    login.IMG_CAPTCHA.set("src", img_url);
+});

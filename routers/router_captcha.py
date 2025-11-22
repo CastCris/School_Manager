@@ -12,8 +12,7 @@ def register_app(app:object)->None:
         captcha_instance = Captcha.Image()
         captcha_token = Token.code_captcha()
         captcha_img = captcha_instance.generate(captcha_token)
-
-        print(captcha_token)
+        # captcha_img = captcha_instance.generate('gggggg999')
 
         img_io = BytesIO()
         captcha_img.save(img_io, 'PNG')

@@ -1,4 +1,6 @@
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+
+import string
 import os
 
 ##
@@ -8,14 +10,8 @@ DEK_LEN = 80
 CODE_CAPTCHA_CHARS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789'
 CODE_CAPTCHA_LEN = 10
 
-##
-FIELD_HASHED_SIZE = 32
-
-##
-PHASH_EMAIL_TOKEN_LEN = 32
-
-PHASH_USER_PASSWORD_LEN = 32
-PHASH_USER_TOKEN_LEN = 32
+CODE_GENERIC_CHARS = string.ascii_letters + string.digits
+CODE_GENERIC_LEN = 10
 
 ##
 MASTER_KEY = os.environ.get("MASTER_KEY", None)
@@ -29,7 +25,7 @@ if SALT_GLOBAL is None:
 
 
 ##
-def code_generate(chars:list, length:int)->str:
+def code_generate(chars:list=CODE_GENERIC_CHARS, length:int=CODE_GENERIC_LEN)->str:
     import secrets
 
     return ''.join(secrets.choice(chars) for _ in range(length))

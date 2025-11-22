@@ -171,7 +171,7 @@ def model_create(model:object, **kwargs)->object|None:
 
         for i in default_value:
             _, attr_name = i.split('DEFAULT_')
-            if attr_name in kwargs.keys():
+            if attr_name in kwargs_copy.keys():
                 continue
 
             for j in field_cipher:
@@ -179,6 +179,9 @@ def model_create(model:object, **kwargs)->object|None:
                     continue
 
                 kwargs_copy[attr_name] = model.__dict__[i]
+                if callable(model.__dict__[i]):
+                    kwargs_copy[attr_name] = model.__dict__[i]()
+
                 break
 
             for j in field_hashed:
@@ -186,10 +189,17 @@ def model_create(model:object, **kwargs)->object|None:
                     continue
 
                 kwargs_copy[attr_name] = model.__dict__[i]
+                if callable(model.__dict__[i]):
+                    kwargs_copy[attr_name] = model.__dict__[i]()
+
                 break
             
-            if attr_name in model.__dict__.keys():
-                kwargs_copy[attr_name] = model.__dict__[i]
+            if not attr_name in model.__dict__.keys() or attr_name in kwargs_copy.keys():
+                continue
+
+            kwargs_copy[attr_name] = model.__dict__[i]
+            if callable(model.__dict__[i]):
+                kwargs_copy[attr_name] = model.__dict__[i]()
 
         ##
         print('kwargs_copy', kwargs_copy)

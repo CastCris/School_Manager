@@ -1,4 +1,5 @@
 from .Config import Config
+from .Seeds import Seeds
 
 from . import Captcha
 
