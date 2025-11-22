@@ -1,4 +1,4 @@
-//
+// Validations
 export function forms_validation(...forms){
     const logs = new MessageLogs();
     const formData = new FormData();
@@ -32,6 +32,36 @@ export function forms_validation(...forms){
     }
 
     return formData;
+}
+
+export async function captchaImg_validation(form){
+    const formData = forms_validation(form);
+    if(!formData)
+        return;
+
+    //
+    const formData_json = Object.fromEntries(formData);
+    const token = formData_json["captcha_token"];
+    const logs = new MessageLogs();
+    
+    let valid = 0;
+
+    // Fetch
+    const response = await fetch(`/captcha/valid/${token}`);
+    const data = await response.json();
+
+    valid = data["valid_captcha"];
+    const message = data["message"];
+
+    logs.CLEAN();
+    logs.ADD(message["type"], message["content"]);
+
+    //
+    console.log(valid);
+    if(!valid)
+        return 0;
+
+    return 1;
 }
 
 // Layouts / Message 

@@ -22,18 +22,22 @@ login.BUTT_CAPTCHA_GET.addEventListener('click', (e) => {
     });
 })
 
-login.BUTT_FORM_FINISH.addEventListener('click', (e) => {
+login.BUTT_FORM_FINISH.addEventListener('click', async (e) => {
     e.preventDefault();
 
     //
     const form_credentials = login.FORM_CREDENTIALS.get();
     const form_captcha = login.FORM_CAPTCHA.get();
 
-    const formData = global.forms_validation(form_credentials, form_captcha);
-    if(!formData)
+    const captcha_result = await global.captchaImg_validation(form_captcha);
+    if(!captcha_result)
         return;
 
     //
+    const formData = global.forms_validation(form_credentials);
+    if(!formData)
+        return;
+
     const formData_json = Object.fromEntries(formData);
 
     fetch('/auth/login', {

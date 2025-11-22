@@ -30,6 +30,9 @@ class Captcha():
         invalid = "Invalid Captcha"
         not_requested = "Captcha not requested"
 
+    class Success(Success):
+        ok = "Valid captcha"
+
 ## Request
 class Request():
     class Error(Error):
@@ -60,8 +63,4 @@ class Login():
         pass
 
     class Success(Success):
-        pass
-
-    #
-    class Captcha(Captcha):
         pass

@@ -45,7 +45,7 @@ def crypt_phash(text, **kwargs)->str:
 
     return hasher.hash(text)
 
-def crypt_phash_auth(text_hasher, text)->bool:
+def crypt_phash_auth(text_hasher:str, text:str)->bool:
     from argon2 import PasswordHasher
 
     ##
