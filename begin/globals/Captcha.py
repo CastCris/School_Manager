@@ -45,7 +45,8 @@ class Image():
             char_x = random.randint(0, 10)
             char_y = random.randint(0 ,25)
 
-            char_img = Image.new('RGBA', (80, 80), (0, 0, 0, 0))
+            char_img = Image.new('RGBA', (100, 100), (0, 0, 0, 0))
+            # char_img = Image.new('RGBA', (80, 80), (0, 0, 0, 0))
             char_draw = ImageDraw.Draw(char_img)
             char_draw.text((char_x, char_y), text=i, font=font, fill=(0, 0, 0))
 
