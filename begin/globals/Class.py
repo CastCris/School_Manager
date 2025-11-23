@@ -8,4 +8,4 @@ def init_from_kwargs(obj:object, **kwargs)->None:
         setattr(obj, i, kwargs[i])
 
 def get_attrs(obj:object)->dict:
-    return { i[0]: i[1] for i in obj.__dict__.items() if not i[0].startswith('__') }
+    return { i[0]: i[1] for i in obj.__dict__.items() if not i[0].startswith('_') }

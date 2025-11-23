@@ -17,6 +17,17 @@
     <div id="message_logs" class="animation_sliding"></div>
 
     <header>
+        <h1>School Manager</h1>
+
+        {% if "user_name" in request.cookies %}
+        <div class="user_header">
+            <h2>Hello {{ Cookie.get(cookie_name="user_name") }}!</h2>
+
+            <a href="{{ url_for("auth_logout") }}">
+                Logout
+            </a>
+        </div>
+        {% endif %}
     </header>
 
     {% block content %}

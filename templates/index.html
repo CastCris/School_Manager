@@ -1,0 +1,21 @@
+{% extends "default/layout_1.html" %}
+
+{% block title %}Index{% endblock %}
+
+{% block content_main %}
+<div class="user_options">
+    <ul>
+        <li>
+            <a href="{{ url_for("view_manager") }}">
+                Manager
+            </a>
+        </li>
+
+        <li>
+            <a href="{{ url_for("view_activity") }}">
+                Activity
+           </a>
+        </li>
+    </ul>
+</div>
+{% endblock %}

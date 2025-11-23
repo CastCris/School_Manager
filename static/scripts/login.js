@@ -11,15 +11,7 @@ login.BUTT_CAPTCHA_GET.addEventListener('click', (e) => {
     e.preventDefault();
 
     //
-    fetch('/captcha/generate')
-    .then(response => response.blob())
-    .then(blob => {
-        const img_url = URL.createObjectURL(blob);
-        // console.log(img_url);
-        // console.log(login.IMG_CAPTCHA);
-
-        login.IMG_CAPTCHA.set("src", img_url);
-    });
+    global.captchaIMG_generate(login.IMG_CAPTCHA.OBJECT);
 })
 
 login.BUTT_FORM_FINISH.addEventListener('click', async (e) => {
@@ -29,12 +21,7 @@ login.BUTT_FORM_FINISH.addEventListener('click', async (e) => {
     const form_credentials = login.FORM_CREDENTIALS.get();
     const form_captcha = login.FORM_CAPTCHA.get();
 
-    const captcha_result = await global.captchaImg_validation(form_captcha);
-    if(!captcha_result)
-        return;
-
-    //
-    const formData = global.forms_validation(form_credentials);
+    const formData = global.forms_validation(form_credentials, form_captcha);
     if(!formData)
         return;
 
@@ -52,7 +39,7 @@ login.BUTT_FORM_FINISH.addEventListener('click', async (e) => {
         const href_link = data["href_link"];
 
         if(href_link != undefined){
-            window.localtion = href_link;
+            window.location.href = href_link;
             return;
         }
 
@@ -62,12 +49,4 @@ login.BUTT_FORM_FINISH.addEventListener('click', async (e) => {
 })
 
 //
-fetch('/captcha/generate')
-.then(response => response.blob())
-.then(blob => {
-    const img_url = URL.createObjectURL(blob);
-    // console.log(img_url);
-    // console.log(login.IMG_CAPTCHA);
-
-    login.IMG_CAPTCHA.set("src", img_url);
-});
+global.captchaIMG_generate(login.IMG_CAPTCHA.OBJECT);

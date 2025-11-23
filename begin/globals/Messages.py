@@ -14,7 +14,7 @@ class Message():
             "type": self.type
         }
 
-##
+## Error & Succcess
 class Error():
     js_class="log_message_erro"
 
@@ -28,6 +28,7 @@ class Success():
 class Captcha():
     class Error(Error):
         invalid = "Invalid Captcha"
+        invalid_type = "Invalid Catpcha type"
         not_requested = "Captcha not requested"
 
     class Success(Success):
@@ -55,7 +56,7 @@ class Request():
 class Login():
     class Error(Error):
         user_not_found = "User not found"
-        incorrect_password = "User password incorrect"
+        invalid_password = "User password incorrect"
 
         invalid_captcha = "Invalid catpcha"
 
@@ -63,4 +64,13 @@ class Login():
         pass
 
     class Success(Success):
+        pass
+
+## Manager
+class Manager():
+    class Error(Error):
+        invalid_entity = "This entity doesn't exists"
+        not_permissions_enough_to_manage_entity = "You don't have permissions enough to manage this entity"
+
+    class Request(Request):
         pass

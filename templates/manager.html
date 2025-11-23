@@ -1,0 +1,46 @@
+{% extends "default/layout_1.html" %}
+
+{% block page_javascript %}
+<script src="{{ url_for("static", filename="scripts/manager.js") }}" type="module" defer></script>
+{% endblock %}
+
+{% block title %}Manager{% endblock %}
+
+{% block content_main %}
+<form id="manager_form_crud">
+    <select name="entity_name" id="manager_select_entityName">
+        {% if "PERMISSION_MANAGER_PERSON" in permissions %}
+        <option value="Person">Person</option>
+        {% endif %}
+
+        {% if "PERMISSION_MANAGER_REGISTER" in permissions %}
+        <option value="Register">Register</option>
+        {% endif %}
+
+        {% if "PERMISSION_MANAGER_LOCALWORK" in permissions %}
+        <option value="LocalWork">LocalWork</option>
+        {% endif %}
+
+        {% if "PERMISSION_MANAGER_DEPARTAMENT" in permissions %}
+        <option value="Departament">Departament</option>
+        {% endif %}
+
+        {% if "PERMISSION_MANAGER_TASK" in permissions %}
+        <option value="Task">Task</option>
+        {% endif %}
+    </select>
+
+    <select name="crud_operation" id="manager_select_cudOperation">
+        <option value="create">Create</option>
+        <option value="delete">Delete</option>
+        <option value="update">Update</option>
+        <option value="select">Select</option>
+    </select>
+
+    <form class="crud_constraint" id="manager_form_crudConstraint"></form>
+
+    <form class="entity_field" id="manager_form_entity"></form>
+
+    <button id="manager_button_form_crud_submit">Submit</button>
+</form>
+{% endblock %}

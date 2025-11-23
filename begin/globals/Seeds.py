@@ -22,13 +22,10 @@ class Seeds():
 
     #
     class Person():
-        id = Token.code_generate()
-
-        cpf = '12345678901'
-        cep = '1234-1234'
+        id = '123'
         name = 'Welligton'
-
         password = 'admin'
+        permissions = 31
 
         #
         def init()->None:
@@ -37,6 +34,5 @@ class Seeds():
             ##
             Register = Seeds.Register
             kwargs = { **Class.get_attrs(Seeds.Person), "registerId":Register.id }
-            print(kwargs)
 
             session_insert(Person, **kwargs)

@@ -1,11 +1,13 @@
 from begin.xtensions import *
-from begin.globals import Config, Router
+from begin.globals import Config, Router, Cookie
 
 from database import *
 
 ##
 app = flask.Flask(__name__)
 app.config.from_object(Config)
+
+app.jinja_env.globals["Cookie"] = Cookie
 
 Router.register(app=app)
 

@@ -1,3 +1,5 @@
+from sqlalchemy import inspect
+
 from .session import session
 from .methods.crypt import *
 
@@ -220,7 +222,7 @@ def model_update(instance:object, **kwargs)->None:
 
     ##
     try:
-        model = type("Model", (instance.__class__, ), {})
+        model = type(instance)
         model_args = model_args_filter(model, **kwargs, dek=getattr(instance, "dek", None))
 
         for i in model_args.keys():
@@ -234,7 +236,7 @@ def model_update(instance:object, **kwargs)->None:
 
 def model_get(instance:object, *args)->tuple|None:
     try:
-        model = type("Model", (instance.__class__, ), {})
+        model = type(instance)
 
         field_cipher = FIELD_CIPHER(model)
         field_hashed = FIELD_HASHED(model)
@@ -269,7 +271,7 @@ def model_get(instance:object, *args)->tuple|None:
 
 def model_unwrap(instance:object)->dict|None:
     try:
-        model = type("model", (instance.__class__, ), {})
+        model = type(instance)
 
         field_cipher = FIELD_CIPHER(model)
         field_hashed = FIELD_HASHED(model)
@@ -291,3 +293,29 @@ def model_unwrap(instance:object)->dict|None:
         session.rollback()
 
         return None
+
+def model_get_columns(instance:object)->tuple:
+    model = inspect(instance).mapper.class_
+    columns = [ i for i in model.__table__.columns]
+
+    return tuple(columns)
+
+def model_get_columns_name(instance:object)->tuple:
+    model = inspect(instance).mapper.class_
+    columns = set(model_get_columns(instance))
+    columns_name = set( i.name for i in columns )
+
+    field_cipher = FIELD_CIPHER(model)
+    field_hashed = FIELD_HASHED(model)
+
+    for i in field_cipher:
+        _, attr_name = i.split('cipher_')
+        columns_name.add(attr_name)
+        columns_name.remove(i)
+
+    for i in field_hashed:
+        _, attr_name = i.split('hashed_')
+        columns_name.add(attr_name)
+        columns_name.remove(i)
+
+    return tuple(columns_name)

@@ -141,6 +141,79 @@ class Image():
 
         return img_lined.convert("RGB")
 
+## Flask application
+def generate_img()->object:
+    from begin.xtensions import flask
+    from begin.globals import Cookie, Token
+
+    from io import BytesIO
+
+    ##
+    captcha_instance = Image()
+    captcha_token = Token.code_captcha()
+    captcha_img = captcha_instance.generate(captcha_token)
+    # captcha_img = captcha_instance.generate('gggggg999')
+
+    print('token: ', captcha_token)
+
+    img_io = BytesIO()
+    captcha_img.save(img_io, 'PNG')
+    img_io.seek(0)
+
+    #
+    captcha_token_hashed = Token.crypt_phash(captcha_token)
+
+    response = flask.make_response(flask.send_file(img_io, mimetype="image/png", download_name="captcha.png"))
+    Cookie.define(response=response, name="captcha_token", value=captcha_token_hashed, max_age=5*60)
+
+    return response
+
+def generate(type:str)->object:
+    type = type.upper()
+
+    if type == "IMG":
+        return generate_img()
+
+    return flask.jsonify({
+        'message': Messages.Message(
+            content=Messages.Captcha.Error.invalid_type,
+            type=Messages.Captcha.Error.js_class
+        ).json
+    })
+
+
+def valid(token_input:str)->object:
+    from begin.xtensions import flask
+    from begin.globals import Cookie, Messages, Token
+
+    ##
+    if Cookie.get("captcha_token") is None:
+        return flask.jsonify({
+            "valid_captcha": False,
+            "message": Messages.Message(
+                content=Messages.Captcha.Error.not_requested,
+                type=Messages.Captcha.Error.js_class
+            ).json
+        })
+
+    captcha_token = Cookie.get("captcha_token")
+    valid = Token.crypt_phash_auth(captcha_token, token_input)
+    msg = Messages.Message(
+        content=Messages.Captcha.Error.invalid if not valid else Messages.Captcha.Success.ok,
+        type=Messages.Captcha.Error.js_class if not valid else Messages.Captcha.Success.js_class
+    ).json
+
+    response = flask.make_response(flask.jsonify({
+        "valid_captcha": valid,
+        "message": msg
+    }))
+    
+    if valid:
+        Cookie.delete(response=response, name="captcha_token")
+
+    return response
+
+
 """
 
 import secrets

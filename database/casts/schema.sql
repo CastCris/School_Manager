@@ -32,33 +32,35 @@ ALTER TABLE
     `Departament_LocalWork` ADD UNIQUE `departament_localwork_hashed_localworkid_unique`(`hashed_localWorkId`);
 CREATE TABLE `PersonInfos`(
     `dek` CHAR(255) NOT NULL,
-    `hasehd_personCpf` CHAR(255) NOT NULL,
+    `hashed_personId` BIGINT NOT NULL,
+    `hashed_cpf` CHAR(255) NOT NULL,
+    `hashed_cep` BIGINT NOT NULL,
     `hashed_email` CHAR(255) NOT NULL,
     `hashed_phone` CHAR(255) NOT NULL,
+    `cipher_cpf` BIGINT NOT NULL,
+    `cipher_cep` BIGINT NOT NULL,
     `cipher_email` VARCHAR(255) NOT NULL,
     `cipher_phone` VARCHAR(255) NOT NULL,
-    PRIMARY KEY(`hasehd_personCpf`)
+    PRIMARY KEY(`hashed_cpf`)
 );
+ALTER TABLE
+    `PersonInfos` ADD INDEX `personinfos_hashed_cep_index`(`hashed_cep`);
 ALTER TABLE
     `PersonInfos` ADD INDEX `personinfos_hashed_email_index`(`hashed_email`);
 ALTER TABLE
     `PersonInfos` ADD INDEX `personinfos_hashed_phone_index`(`hashed_phone`);
 CREATE TABLE `Person`(
     `dek` CHAR(255) NOT NULL,
+    `id` CHAR(255) NOT NULL,
     `hashed_registerId` CHAR(255) NOT NULL,
-    `hashed_cpf` CHAR(255) NOT NULL,
-    `hashed_cep` CHAR(255) NOT NULL,
     `hashed_name` CHAR(255) NOT NULL,
-    `cipher_cpf` CHAR(255) NOT NULL,
-    `cipher_cep` CHAR(255) NOT NULL,
     `cipher_name` VARCHAR(255) NOT NULL,
     `password` CHAR(255) NOT NULL,
-    PRIMARY KEY(`hashed_cpf`)
+    `permissions` INT NOT NULL,
+    PRIMARY KEY(`id`)
 );
 ALTER TABLE
     `Person` ADD INDEX `person_hashed_registerid_index`(`hashed_registerId`);
-ALTER TABLE
-    `Person` ADD INDEX `person_hashed_cep_index`(`hashed_cep`);
 ALTER TABLE
     `Person` ADD INDEX `person_hashed_name_index`(`hashed_name`);
 CREATE TABLE `Register`(
@@ -196,8 +198,6 @@ ALTER TABLE
 ALTER TABLE
     `BulletinGeneral` ADD CONSTRAINT `bulletingeneral_hashed_studentid_foreign` FOREIGN KEY(`hashed_studentId`) REFERENCES `Student`(`hashed_registerId`);
 ALTER TABLE
-    `PersonInfos` ADD CONSTRAINT `personinfos_hasehd_personcpf_foreign` FOREIGN KEY(`hasehd_personCpf`) REFERENCES `Person`(`hashed_cpf`);
-ALTER TABLE
     `Agreement` ADD CONSTRAINT `agreement_hashed_departamentid_foreign` FOREIGN KEY(`hashed_departamentId`) REFERENCES `Departament_LocalWork`(`hashed_departamentId`);
 ALTER TABLE
     `Agreement` ADD CONSTRAINT `agreement_hashed_tagtimeid_foreign` FOREIGN KEY(`hashed_tagTimeId`) REFERENCES `TagTime`(`hashed_id`);
@@ -207,3 +207,5 @@ ALTER TABLE
     `Agreement` ADD CONSTRAINT `agreement_hashed_registerid_foreign` FOREIGN KEY(`hashed_registerId`) REFERENCES `Register`(`hashed_id`);
 ALTER TABLE
     `Bulletin` ADD CONSTRAINT `bulletin_hashed_agreementid_foreign` FOREIGN KEY(`hashed_agreementId`) REFERENCES `Agreement`(`hashed_id`);
+ALTER TABLE
+    `PersonInfos` ADD CONSTRAINT `personinfos_hashed_personid_foreign` FOREIGN KEY(`hashed_personId`) REFERENCES `Person`(`id`);
