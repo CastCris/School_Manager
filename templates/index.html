@@ -1,21 +1,17 @@
 {% extends "default/layout_1.html" %}
-
 {% block title %}Index{% endblock %}
-
+{% block page_style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='style/pages/home.css') }}">
+{% endblock %}
 {% block content_main %}
-<div class="user_options">
-    <ul>
-        <li>
-            <a href="{{ url_for("view_manager") }}">
-                Manager
-            </a>
-        </li>
-
-        <li>
-            <a href="{{ url_for("view_activity") }}">
-                Activity
-           </a>
-        </li>
-    </ul>
+<div class="home-page">
+  <div class="home-card">
+    <nav class="user_options glass-nav">
+      <ul>
+        <li><a href="{{ url_for('view_manager') }}" class="nav-link">Manager</a></li>
+        <li><a href="{{ url_for('view_activity') }}" class="nav-link">Activity</a></li>
+      </ul>
+    </nav>
+  </div>
 </div>
 {% endblock %}

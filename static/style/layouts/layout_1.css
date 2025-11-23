@@ -1,0 +1,98 @@
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: radial-gradient(circle at top left, #23284e 0%, #232954 40%, #0e1d28 100%);
+  color: #f3f4f6;
+  transition: background 0.5s, color 0.42s;
+}
+body.light-mode {
+  background: radial-gradient(circle at top left, #e6eefc 0%, #dbeafe 60%, #fafdff 100%);
+  color: #222f3d;
+}
+
+.app-header {
+  position: fixed;
+  top: 0; left: 0; width: 100vw;
+  z-index: 100;
+  background: rgba(31, 36, 69, 0.22);
+  border-bottom: 1.5px solid rgba(148,163,184,0.13);
+  backdrop-filter: blur(15px) saturate(1.04);
+  box-shadow: 0 2px 19px rgb(58 65 121 / 14%);
+  padding: 0.38em 0 0.24em 0;
+  transition: background .32s, border-bottom .22s;
+}
+body.light-mode .app-header {
+  background: rgba(236,245,255,0.99);
+  border-bottom: 1.5px solid #b6cef9;
+  box-shadow: 0 2px 11px rgb(122 153 248 / 21%);
+}
+.header-inline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 2em;
+  gap: 2.4em;
+}
+h1 {
+  font-size: 1.46rem;
+  font-weight: 700;
+  color: inherit;
+  letter-spacing: -0.01em;
+}
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 1.2em;
+}
+.user-welcome {
+  font-size: 1.02em;
+  color: #94a3b8;
+  font-weight: 400;
+  margin-right: .6em;
+  transition: color .18s;
+}
+body.light-mode .user-welcome { color: #6b7280; }
+.logout-link {
+  color: #67e8f9;
+  text-decoration: none;
+  font-size: 1.08em;
+  letter-spacing: 0.03em;
+  margin-left: .4em;
+  transition: color .15s;
+}
+.logout-link:hover { color: #10b981; }
+#theme-toggle {
+  font-size: 1.56em;
+  background: linear-gradient(120deg,rgba(139,92,246,0.14),rgba(45,212,191,0.17));
+  border: 1.3px solid rgba(129,140,248,0.14);
+  padding: 0.24em 0.68em;
+  border-radius: 999px;
+  cursor: pointer;
+  color: #67e8f9;
+  margin-left: 1.14em;
+  box-shadow: 0 1px 7px rgb(129 140 248 / 13%);
+  transition: background .18s, color .18s, box-shadow .18s;
+}
+#theme-toggle:hover {
+  background: linear-gradient(120deg, #6366f1 40%, #22d3ee 98%);
+  color: #fff;
+  box-shadow: 0 4px 18px rgb(139 92 246 / 27%);
+}
+body.light-mode #theme-toggle {
+  background: linear-gradient(125deg, #dbeafe 3%, #a5b4fc 64%, #bae6fd 96%);
+  color: #3c4f9b;
+  border: 1.3px solid #a7b5f2;
+}
+body.light-mode #theme-toggle:hover {
+  background: linear-gradient(120deg, #a5b4fc 10%, #bfdbfe 98%);
+  color: #094d90;
+  box-shadow: 0 4px 12px #a7b5f2;
+}
+main { margin-top: 3.5em; }
+@media (max-width: 700px) {
+  .header-inline { padding: 0 0.7em; gap: 0.8em; }
+  h1 { font-size: 1.08em; }
+  .user-welcome { font-size: 1em; }
+  #theme-toggle { font-size: 1.19em; padding: 0.18em 0.42em;}
+}

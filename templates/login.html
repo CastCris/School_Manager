@@ -1,47 +1,49 @@
 {% extends "default/layout_2.html" %}
 
-{% block page_javascript %}
-<script src="{{ url_for("static", filename="scripts/login.js") }}" type="module" defer></script>
+{% block page_style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='style/pages/login.css') }}">
 {% endblock %}
 
 {% block title %}Login{% endblock %}
 
-<!-- -->
-{% block content_main_1 %}
-<form id="login_form_credentials">
-    <div class="user_data_input">
-        <label>
-            <h3>User ID</h3>
-        </label>
-        <input type="text" autocomplete="off" name="user_id" required>
-
-        <label>
-            <h3>User Password</h3>
-        </label>
-        <input type="text" autocomplete="off" name="user_password" required>
-
+{% block content_main %}
+<div class="login-page">
+  <div class="login-card flex-card">
+    <div class="login-row">
+      <div class="login-left">
+        <h2 class="login-title">Welcome back</h2>
+        <form id="login_form_credentials" class="login-form">
+          <div class="user_data_input">
+            <label><h3>User ID</h3></label>
+            <input type="text" autocomplete="off" name="user_id" required>
+            <label><h3>User Password</h3></label>
+            <input type="password" autocomplete="off" name="user_password" required>
+          </div>
+        </form>
+      </div>
+      <div class="login-right">
+        <h2 class="login-title">Security check</h2>
+        <form id="login_form_captcha" class="login-form">
+          <div class="user_data_input">
+            <label><h3>Captcha</h3></label>
+            <div class="captcha-container">
+              <img id="login_image_captcha" alt="Captcha image">
+            </div>
+            <button id="login_image_captcha_get" type="button" class="ghost-button">
+              <span>Get new captcha</span>
+            </button>
+            <input type="text" autocomplete="off" name="captcha_input" required>
+          </div>
+        </form>
+      </div>
     </div>
-
-</form>
+    <button id="login_form_finish" type="submit" class="primary-button">
+      <span>Finish!</span>
+    </button>
+  </div>
+</div>
 {% endblock %}
 
-{% block content_main_2 %}
-<form id="login_form_captcha">
-    <div class="user_data_input">
-        <label>
-            <h3>Captcha</h3>
-        </label>
-        <img id="login_image_captcha">
-
-        <button id="login_image_captcha_get">
-            <h3>Get new captcha</h3>
-        </button>
-
-        <!-- -->
-        <input type="text" autocomplete="off" name="captcha_input" required>
-    </div>
-
-    <button id="login_form_finish">Finish!</button>
-
-</form>
+{% block page_javascript %}
+<script src="{{ url_for('static', filename='scripts/login.js') }}" type="module" defer></script>
 {% endblock %}

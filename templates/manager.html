@@ -1,46 +1,30 @@
 {% extends "default/layout_1.html" %}
-
-{% block page_javascript %}
-<script src="{{ url_for("static", filename="scripts/manager.js") }}" type="module" defer></script>
+{% block page_style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='style/pages/home.css') }}">
 {% endblock %}
-
-{% block title %}Manager{% endblock %}
-
 {% block content_main %}
-<form id="manager_form_crud">
-    <select name="entity_name" id="manager_select_entityName">
-        {% if "PERMISSION_MANAGER_PERSON" in permissions %}
-        <option value="Person">Person</option>
-        {% endif %}
-
-        {% if "PERMISSION_MANAGER_REGISTER" in permissions %}
-        <option value="Register">Register</option>
-        {% endif %}
-
-        {% if "PERMISSION_MANAGER_LOCALWORK" in permissions %}
-        <option value="LocalWork">LocalWork</option>
-        {% endif %}
-
-        {% if "PERMISSION_MANAGER_DEPARTAMENT" in permissions %}
-        <option value="Departament">Departament</option>
-        {% endif %}
-
-        {% if "PERMISSION_MANAGER_TASK" in permissions %}
-        <option value="Task">Task</option>
-        {% endif %}
-    </select>
-
-    <select name="crud_operation" id="manager_select_crudOperation">
+<div class="home-page">
+  <div class="home-card">
+    <form id="manager_form_crud" class="manager-form-simple">
+      <select name="entity_name" id="manager_select_entityName" class="glass-select">
+        {% if "PERMISSION_MANAGER_PERSON" in permissions %}<option value="Person">Person</option>{% endif %}
+        {% if "PERMISSION_MANAGER_REGISTER" in permissions %}<option value="Register">Register</option>{% endif %}
+        {% if "PERMISSION_MANAGER_LOCALWORK" in permissions %}<option value="LocalWork">LocalWork</option>{% endif %}
+        {% if "PERMISSION_MANAGER_DEPARTAMENT" in permissions %}<option value="Departament">Departament</option>{% endif %}
+        {% if "PERMISSION_MANAGER_TASK" in permissions %}<option value="Task">Task</option>{% endif %}
+      </select>
+      <select name="crud_operation" id="manager_select_crudOperation" class="glass-select">
         <option value="create">Create</option>
         <option value="delete">Delete</option>
         <option value="update">Update</option>
         <option value="select">Select</option>
-    </select>
-
-    <div class="crud_constraint" id="manager_box_crudConstraint"></div>
-
-    <sdiv class="entity_field" id="manager_box_entity"></div>
-
-    <button id="manager_button_form_crud_submit">Submit</button>
-</form>
+      </select>
+      <div class="manager-fields" id="manager_box_entity"></div>
+      <button id="manager_button_form_crud_submit" type="submit" class="primary-button">Submit</button>
+    </form>
+  </div>
+</div>
+{% endblock %}
+{% block page_javascript %}
+<script src="{{ url_for('static', filename='scripts/manager.js') }}" type="module" defer></script>
 {% endblock %}

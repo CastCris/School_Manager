@@ -2,38 +2,34 @@
 <html>
 <head>
     <title>{% block title %}{% endblock %}</title>
-
-    <link rel="stylesheet" href="{{ url_for("static", filename="style/fonts.css") }}">
-    <link rel="stylesheet" href="{{ url_for("static", filename="style/layouts/layout_1.css") }}">
-
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/fonts.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/layouts/layout_1.css') }}">
     {% block system_style %}{% endblock %}
-    {% block system_javascript %}{% endblock %}
-
     {% block page_style %}{% endblock %}
-    {% block page_javascript %}{% endblock %}
-     
 </head>
 <body>
-    <div id="message_logs" class="animation_sliding"></div>
-
-    <header>
-        <h1>School Manager</h1>
-
-        {% if "user_name" in request.cookies %}
-        <div class="user_header">
-            <h2>Hello {{ Cookie.get(cookie_name="user_name") }}!</h2>
-
-            <a href="{{ url_for("auth_logout") }}">
-                Logout
-            </a>
+    <header class="app-header glass-header">
+        <div class="header-inline">
+            <h1>School Manager</h1>
+            <div class="header-right">
+                {% if "user_name" in request.cookies %}
+                <span class="user-welcome">Hello {{ Cookie.get(cookie_name="user_name") }}</span>
+                <a href="{{ url_for('auth_logout') }}" class="logout-link">Logout</a>
+                {% endif %}
+                <button id="theme-toggle" aria-label="Toggle theme"></button>
+            </div>
         </div>
-        {% endif %}
     </header>
-
+    <div id="message_logs" class="animation_sliding"></div>
     {% block content %}
         <main>
             {% block content_main %}{% endblock %}
         </main>
     {% endblock %}
+    {% block system_javascript %}{% endblock %}
+    {% block page_javascript %}{% endblock %}
+    <script src="{{ url_for('static', filename='scripts/theme_toggle.js') }}"></script>
 </body>
 </html>
