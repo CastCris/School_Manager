@@ -205,6 +205,10 @@ class Element {
     get(field_name){
         return this.OBJECT[field_name];
     }
+
+    get_object(){
+        return this.OBJECT;
+    }
 }
 
 

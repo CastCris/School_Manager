@@ -18,8 +18,8 @@ login.BUTT_FORM_FINISH.addEventListener('click', async (e) => {
     e.preventDefault();
 
     //
-    const form_credentials = login.FORM_CREDENTIALS.get();
-    const form_captcha = login.FORM_CAPTCHA.get();
+    const form_credentials = login.FORM_CREDENTIALS.get_object();
+    const form_captcha = login.FORM_CAPTCHA.get_object();
 
     const formData = global.forms_validation(form_credentials, form_captcha);
     if(!formData)

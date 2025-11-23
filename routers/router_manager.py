@@ -126,7 +126,6 @@ def register_app(app:object)->None:
             model = Task
 
         model_fields = [ i for i in model_get_columns_name(model) if i != "dek" ]
-        print(model_fields)
 
         return flask.jsonify({
             'entity_fields': model_fields
