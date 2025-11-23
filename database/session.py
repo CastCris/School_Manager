@@ -17,7 +17,7 @@ def mariadb_database_drop(engine:object)->None:
     metadata.drop_all(engine)
 
 def mariadb_database_create(engine:object)->object:
-    with open('database/casts/schema.sql', 'r') as file:
+    with open('database/casts/mariadb_schema.sql', 'r') as file:
         sql = file.read()
 
     with engine.connect() as connection:
@@ -46,6 +46,45 @@ def mariadb_init()->None:
     session = Session()
 
 
+def sqlite_database_drop(engine:object)->None:
+    metadata = MetaData()
+    metadata.reflect(bind=engine)
+
+    metadata.drop_all(engine)
+
+def sqlite_database_create(engine:object)->object:
+    with open('database/casts/sqlite_schema.sql', 'r') as file:
+        sql = file.read()
+
+    with engine.connect() as connection:
+        for i in sql.split(';'):
+            connection.execute(text(i))
+
+        connection.commit()
+
+    metadata = MetaData()
+    metadata.reflect(bind=engine)
+
+    Base = declarative_base(metadata=metadata)
+    return Base
+
+def sqlite_init()->None:
+    global engine
+
+    global Base
+    global session
+
+    #
+    engine = create_engine('sqlite:///schoolDB', echo=True)
+
+    sqlite_database_drop(engine)
+    Base = sqlite_database_create(engine)
+
+    Session = sessionmaker(bind=engine)
+    session = Session()
+
+##
 engine = Base = session = None
 
-mariadb_init()
+# mariadb_init()
+sqlite_init()

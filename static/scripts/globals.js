@@ -202,8 +202,8 @@ class Element {
         this.OBJECT[field_name] = field_value;
     }
 
-    get(){
-        return this.OBJECT;
+    get(field_name){
+        return this.OBJECT[field_name];
     }
 }
 
@@ -260,19 +260,38 @@ export class Manager extends Page{
         this.SLCT_ENTITY_NAME = new Element({
             id: "manager_select_entityName"
         });
-        this.FORM_ENTITY = new Element({
-            id: "manager_form_entity"
+        this.BOX_ENTITY_FIELD = new Element({
+            id: "manager_box_entity"
         });
+        this.ENTITY_FIELD = null;
 
         this.SLCT_CRUD_OPERATION = new Element({
             id: "manager_select_crudOperation"
         });
-        this.FORM_CRUD_CONSTRAINT = new Element({
-            id: "manager_form_crudConstraint"
+        this.BOX_CRUD_CONSTRAINT = new Element({
+            id: "manager_box_crudConstraint"
         });
 
         this.BUTT_FORM_CRUD_SUBMIT = new Element({
             id: "manager_button_form_crud_submit"
         });
     }
+
+    build_entity_field(){
+        this.BOX_ENTITY_FIELD.set("innerHTML", '')
+        const crud_operation = this.SLCT_CRUD_OPERATION.get("value").toLowerCase();
+
+        if(crud_operation == 'delele' || crud_operation == 'select')
+            return;
+
+        for(const i of this.ENTITY_FIELD){
+            this.BOX_ENTITY_FIELD.set("innerHTML", this.BOX_ENTITY_FIELD.get("innerHTML") + `
+                <label>${i}</label>
+                <input type="text" name="entity_field_${i}">
+                <br>
+            `);
+        }
+    }
+
+    build_crud_constraint(){}
 }
