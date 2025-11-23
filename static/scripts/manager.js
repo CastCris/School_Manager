@@ -4,45 +4,43 @@ import * as global from './globals.js'
 const manager = new global.Manager();
 manager.init_elements();
 
+//
 manager.SLCT_ENTITY_NAME.addEventListener('change', (e) => {
     e.preventDefault();
 
     //
-    const value = e.target.value;
-    const json = { "entity_name": value };
-
-    fetch('/auth/manager/select/entity', {
-        method: 'POST',
-        headers: {'Content-Type': "application/json; charset=utf-8"},
-
-        body: JSON.stringify(json)
-    })
-    .then(response => response.json())
-    .then(data => {
-        const message = data["message"];
-        const entity_fields = data["entity_fields"];
-
-        console.log(entity_fields, data);
-        if(entity_fields != undefined){
-            manager.ENTITY_FIELD = entity_fields;
-            manager.build_entity_field();
-
-            return;
-        }
-
-        logs.CLEAN();
-        logs.ADD(message["type"], message["content"]);
-    });
+    manager.entity_field_build();
 });
+
 
 manager.SLCT_CRUD_OPERATION.addEventListener('change', (e) => {
     e.preventDefault();
 
     //
-    const value = e.target.value;
+    const crud_operation = e.target.value;
+    const entity_name = manager.SLCT_ENTITY_NAME.get("value");
 
-    console.log(value);
+    manager.entity_field_build();
+    manager.crud_constraint_build()
 });
+
+
+manager.BUTT_CRUD_CONSTRAINT_ADD.addEventListener('click', (e) => {
+    e.preventDefault();
+
+    //
+    manager.BUTT_CRUD_CONSTRAINT_ADD.run("remove");
+
+    const new_node_crudConstraint = manager.NODE_CRUD_CONSTRAINT();
+    const new_butt_crudConstraint_add = manager.NODE_BUTT_CRUD_CONSTRAINT_ADD()
+
+    manager.BOX_CRUD_CONSTRAINT.run("appendChild", new_node_crudConstraint);
+    manager.BOX_CRUD_CONSTRAINT.run("appendChild", new_butt_crudConstraint_add);
+
+
+    manager.BUTT_CRUD_CONSTRAINT_ADD.init();
+});
+
 
 manager.BUTT_FORM_CRUD_SUBMIT.addEventListener('click', (e) => {
     e.preventDefault();
@@ -50,3 +48,8 @@ manager.BUTT_FORM_CRUD_SUBMIT.addEventListener('click', (e) => {
     //
     console.log('submited forms!');
 });
+
+
+//
+manager.entity_field_build();
+manager.crud_constraint_build();

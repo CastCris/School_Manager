@@ -177,7 +177,6 @@ class Element {
 
     //
     addEventListener(type, func){
-        // console.log(type, func);
         this.EVENT_LISTENERS.push(new EventListener({
             type: type,
             func: func
@@ -192,9 +191,12 @@ class Element {
     //
     init(){
         this.OBJECT = document.getElementById(this.ID);
+        if(!this.OBJECT)
+            return;
+
         for(const i of this.EVENT_LISTENERS){
-            // console.log(i, this.OBJECT);
-            this.OBJECT.addEventListener(i.type, i.func)
+            console.log(this.OBJECT, i.TYPE, i.FUNC);
+            this.OBJECT.addEventListener(i.TYPE, i.FUNC);
         }
     }
 
@@ -208,6 +210,15 @@ class Element {
 
     get_object(){
         return this.OBJECT;
+    }
+
+    remove(){
+        this.OBJECT.remove();
+    }
+
+    run(func_name, ...args){
+        args = args || [];
+        this.OBJECT[func_name](...args);
     }
 }
 
@@ -225,6 +236,18 @@ class Page extends Layout_1{
             this[i].init()
         }
     }
+
+    create_element(tag, args){
+        const new_element = document.createElement(tag);
+        args = args || {};
+
+        for(const i in args){
+            new_element[i] = args[i];
+        }
+
+        return new_element;
+    }
+
 }
 
 // Login 
@@ -261,6 +284,7 @@ export class Manager extends Page{
             id: "manager_form_crud"
         });
 
+
         this.SLCT_ENTITY_NAME = new Element({
             id: "manager_select_entityName"
         });
@@ -269,24 +293,98 @@ export class Manager extends Page{
         });
         this.ENTITY_FIELD = null;
 
+
         this.SLCT_CRUD_OPERATION = new Element({
             id: "manager_select_crudOperation"
         });
         this.BOX_CRUD_CONSTRAINT = new Element({
             id: "manager_box_crudConstraint"
         });
+        this.BUTT_CRUD_CONSTRAINT_ADD = new Element({
+            id: "manager_button_node_crudConstraint_add"
+        });
+
 
         this.BUTT_FORM_CRUD_SUBMIT = new Element({
             id: "manager_button_form_crud_submit"
         });
+
+        //
+        this.NODE_CRUD_CONSTRAINT = () => {
+            const BOX_CRUD_CONSTRAINT = this.BOX_CRUD_CONSTRAINT.get_object();
+            
+            const node_crudConstraint_amount = BOX_CRUD_CONSTRAINT.querySelectorAll(`.${node_crudConstraint_class}`).length;
+
+            const id = `manager_node_crudConstraint_${node_crudConstraint_amount}`;
+            const cssClass = "node_crudConstraint";
+            const innerHTML = `
+            <select name="select_crudConstraint">
+                <option value="where">Where</option>
+            </select>
+            `
+
+            return this.create_element('div', {
+                "id": id,
+                "class": cssClass,
+                "innerHTML": innerHTML
+            });
+        }
+
+        this.NODE_BUTT_CRUD_CONSTRAINT_ADD = () => {
+            const id = `manager_button_node_crudConstraint_add`;
+            const cssClass = "node_crudConstraint_add";
+            const innerHTML = `
+            Add new Constraint
+            `
+
+            return this.create_element('button', {
+                "id": id,
+                "class": cssClass,
+                "innerHTML": innerHTML
+            });
+        }
     }
 
-    build_entity_field(){
-        this.BOX_ENTITY_FIELD.set("innerHTML", '')
-        const crud_operation = this.SLCT_CRUD_OPERATION.get("value").toLowerCase();
+    //
+    async entity_field_get(entity_name){
+        const json = { "entity_name": entity_name };
 
-        if(crud_operation == 'delele' || crud_operation == 'select')
+        const response = await fetch('/auth/manager/select/entity', {
+            method: 'POST',
+            headers: {'Content-Type': "application/json; charset=utf-8"},
+
+            body: JSON.stringify(json)
+        });
+        const data = await response.json();
+
+        //
+        const logs = new MessageLogs();
+
+        const message = data["message"];
+        const entity_fields = data["entity_fields"] || null;
+
+        if(message != undefined){
+            logs.CLEAN();
+            logs.ADD();
+        }
+
+        return entity_fields;
+    }
+
+
+    //
+    async entity_field_build(){
+        const entity_name = this.SLCT_ENTITY_NAME.get("value");
+        const crud_operation = this.SLCT_CRUD_OPERATION.get("value").toLowerCase();
+        this.BOX_ENTITY_FIELD.set("innerHTML", '')
+
+        if(crud_operation == 'delete' || crud_operation == 'select')
             return;
+
+        this.ENTITY_FIELD = await this.entity_field_get(entity_name);
+        if(!this.ENTITY_FIELD)
+            return;
+
 
         for(const i of this.ENTITY_FIELD){
             this.BOX_ENTITY_FIELD.set("innerHTML", this.BOX_ENTITY_FIELD.get("innerHTML") + `
@@ -297,5 +395,16 @@ export class Manager extends Page{
         }
     }
 
-    build_crud_constraint(){}
+    crud_constraint_build(){
+        const entity_name = this.SLCT_ENTITY_NAME.get("value");
+        const crud_operation = this.SLCT_CRUD_OPERATION.get("value").toLowerCase();
+        this.BOX_CRUD_CONSTRAINT.set("innerHTML", '');
+
+        if(crud_operation == 'create' || crud_operation == 'update')
+            return;
+
+        const button_add = this.NODE_BUTT_CRUD_CONSTRAINT_ADD();
+        this.BOX_CRUD_CONSTRAINT.run("appendChild", button_add);
+        this.BUTT_CRUD_CONSTRAINT_ADD.init();
+    }
 }

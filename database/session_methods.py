@@ -302,20 +302,29 @@ def model_get_columns(instance:object)->tuple:
 
 def model_get_columns_name(instance:object)->tuple:
     model = inspect(instance).mapper.class_
-    columns = set(model_get_columns(instance))
-    columns_name = set( i.name for i in columns )
+    columns = model_get_columns(instance)
 
+    #
     field_cipher = FIELD_CIPHER(model)
     field_hashed = FIELD_HASHED(model)
 
-    for i in field_cipher:
-        _, attr_name = i.split('cipher_')
-        columns_name.add(attr_name)
-        columns_name.remove(i)
+    columns_name = []
+    columns_name_set = set()
 
-    for i in field_hashed:
-        _, attr_name = i.split('hashed_')
-        columns_name.add(attr_name)
-        columns_name.remove(i)
+    for i in columns:
+        name = i.name
+        attr_name = name
+
+        if name.startswith('cipher_'):
+            _, attr_name = name.split('cipher_')
+
+        if name.startswith('hashed_'):
+            _, attr_name = name.split('hashed_')
+
+        if attr_name in columns_name_set:
+            continue
+
+        columns_name.append(attr_name)
+        columns_name_set.add(attr_name)
 
     return tuple(columns_name)
