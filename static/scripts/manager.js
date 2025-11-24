@@ -110,6 +110,54 @@ export class Manager extends global.Page{
             };
         }
 
+        this.DATA_ELEMENT_TABLE = (columns_name) => {
+            const id = "element_table";
+            const classCss = "element_table";
+            var innerHTML = '';
+
+            var columns_table_html = '';
+            for(const i of columns_name){
+                columns_table_html += `
+                <th>${i}</th>
+                `;
+            }
+
+            innerHTML = `
+            <tr>
+                ${columns_table_html}
+            </tr>
+            `;
+
+            return {
+                "id": id,
+                "classList": classCss,
+                "innerHTML": innerHTML
+            };
+        }
+
+        this.DATA_ELEMENT_TABLE_LINE = (columns_value) => {
+            const classCss = "element_table_node";
+            var innerHTML = '';
+
+            var line = '';
+            for(const i of columns_value){
+                line += `
+                <td>${i}</td>
+                `;
+            }
+
+            innerHTML = `
+            ${line}
+            `;
+
+            return {
+                "classList": classCss,
+                "innerHTML": innerHTML
+            };
+        }
+
+                
+
         this.NODE_CRUD_CONSTRAINT = () => {
             const node = this.create_element('div', this.DATA_CRUD_CONSTRAINT());
             const button_del = this.NODE_BUTT_CRUD_CONSTRAINT_DEL();
@@ -135,6 +183,18 @@ export class Manager extends global.Page{
 
             return node;
         }
+
+        this.NODE_ELEMENT_TABLE = (columns_name) => {
+            return this.create_element('table', this.DATA_ELEMENT_TABLE(columns_name));
+        }
+
+        this.NODE_ELEMENT_TABLE_LINE = (columns_value) => {
+            return this.create_element('tr', this.DATA_ELEMENT_TABLE_LINE(columns_value));
+        }
+
+        this.SELECT_OUTPUT = new global.Element({
+            id: "select_output"
+        });
     }
 
     //
@@ -267,8 +327,8 @@ manager.BUTT_FORM_CRUD_SUBMIT.addEventListener('click', (e) => {
         }
     };
 
-    console.log(formData_json);
-    console.log(formData_json, JSON.stringify(formData_json));
+    // console.log(formData_json);
+    // console.log(formData_json, JSON.stringify(formData_json));
     fetch('/auth/manager/CRUD', {
         method: 'POST',
         headers: {'Content-Type': 'application/json; charset=utf-8'},
@@ -278,9 +338,28 @@ manager.BUTT_FORM_CRUD_SUBMIT.addEventListener('click', (e) => {
     .then(response => response.json())
     .then(data => {
         const message = data["message"];
-        const result = data["result"];
+        const result = data["query_result"];
 
         console.log(data);
+        manager.SELECT_OUTPUT.set('innerHTML', '');
+        if(result && result.length){
+
+            const columns_name = Object.keys(result[0]);
+            const table = manager.NODE_ELEMENT_TABLE(columns_name);
+
+            console.log(columns_name, table);
+            for(const i of result){
+                const columns_value = Object.values(i);
+                const line = manager.NODE_ELEMENT_TABLE_LINE(columns_value);
+                table.appendChild(line);
+            }
+
+            console.log(table);
+
+
+            manager.SELECT_OUTPUT.run('appendChild', table);
+        }
+
     });
 });
 

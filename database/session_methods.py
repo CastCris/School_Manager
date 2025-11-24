@@ -382,7 +382,7 @@ def model_get_columns_value(instance:object)->dict:
         if name.startswith('cipher_'):
             _, attr_name = name.split('cipher_')
         
-        value = model_get(instance, name)
+        value = model_get(instance, name)[0]
 
         columns_value[attr_name] = value
 

@@ -268,7 +268,7 @@ def register_app(app:object)->None:
             session_delete(query)
 
         if crud_operation == 'update':
-            session_update(query)
+            session_update(query, **kwargs_create)
 
         if crud_operation == 'select':
             for i in query:
