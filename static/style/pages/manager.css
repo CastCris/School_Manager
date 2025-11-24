@@ -1,0 +1,147 @@
+.manager-main-box {
+  background: rgba(26, 30, 52, 0.80);
+  border-radius: 24px;
+  box-shadow: 0 8px 70px 0 rgb(48 60 120 / 15%);
+  border: 1.5px solid rgba(119,133,180,0.29);
+  max-width: 980px;
+  width: 98vw;
+  margin: 0 auto;
+  padding: 2.5rem 2.6rem 2.6rem 2.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.2em;
+  align-items: stretch;
+  animation: card-in 550ms cubic-bezier(0.16, 0.84, 0.44, 1) both;
+  isolation: isolate;
+}
+body.light-mode .manager-main-box {
+  background: rgba(239, 247, 255, 0.81);
+  border: 1.5px solid #b6cef9;
+  box-shadow: 0 8px 70px 0 rgb(139 170 246 / 13%);
+}
+.manager-form-simple {
+  display: flex;
+  flex-direction: column;
+  gap: 2.3em;
+  width: 100%;
+  align-items: center;
+}
+.select-row {
+  display: flex;
+  gap: 2.5em;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2.2em;
+  width: 100%;
+}
+.manager-glass-select {
+  font-family: inherit;
+  font-size: 1.06rem;
+  background: rgba(12, 18, 34, 0.57);
+  color: #edeff7;
+  border-radius: 0.9rem;
+  border: 1.5px solid rgba(148, 163, 184, 0.56);
+  box-shadow: 0 2px 16px 0 rgba(35,56,107,0.07);
+  padding: 0.70rem 2.1rem 0.70rem 1.2rem;
+  outline: none;
+  min-width: 160px;
+  width: 224px;
+  transition: border-color 140ms, background-color 180ms, color 180ms;
+  appearance: none;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='21' viewBox='0 0 18 18' width='21' xmlns='http://www.w3.org/2000/svg'><path d='M6 8l3 3 3-3' stroke='white' stroke-width='2' stroke-linecap='round'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 1.2em center;
+  background-size: 22px 22px;
+}
+.manager-glass-select:focus {
+  border-color: #7ec7fd;
+  background: rgba(34,46,61,0.84);
+  color: #7fe1d6;
+}
+body.light-mode .manager-glass-select {
+  background: #eef6ff;
+  color: #223252;
+  border: 1.5px solid #a8cdf9;
+  background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='21' viewBox='0 0 18 18' width='21' xmlns='http://www.w3.org/2000/svg'><path d='M6 8l3 3 3-3' stroke='black' stroke-width='2' stroke-linecap='round'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 1.2em center;
+  background-size: 22px 22px;
+}
+body.light-mode .manager-glass-select:focus {
+  background: #dbebfa;
+  border-color: #74bef8;
+  color: #244186;
+}
+.manager-fields {
+  width: 100%;
+  margin: 0 auto;
+  margin-top: 2.0em;
+  display: flex;
+  flex-direction: column;
+  gap: 1.35em;
+  align-items: center;
+}
+.manager-fields label {
+  color: #b6bed6;
+  font-size: 1.03em;
+  margin-bottom: 0.16em;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-align: left;
+  width: 99%;
+  display: block;
+  font-family: inherit;
+}
+body.light-mode .manager-fields label { color: #6376a9; }
+.manager-glass-input {
+  width: 100%;
+  border-radius: 0.9rem;
+  background: rgba(12, 18, 34, 0.57);
+  color: #edeff7;
+  font-size: 1rem;
+  border: 1.5px solid rgba(148, 163, 184, 0.56);
+  padding: 0.85rem 1rem;
+  box-shadow: 0 2px 16px 0 rgba(35,56,107,0.07);
+  outline: none;
+  margin-bottom: 0.18em;
+  font-family: inherit;
+  transition: border-color 140ms, background-color 180ms, color 180ms;
+}
+.manager-glass-input:focus {
+  border-color: #7ec7fd;
+  background: rgba(34,46,61,0.84);
+  color: #7fe1d6;
+}
+body.light-mode .manager-glass-input {
+  background: #eef6ff;
+  color: #223252;
+  border: 1.5px solid #a8cdf9;
+}
+body.light-mode .manager-glass-input:focus {
+  background: #dbebfa;
+  border-color: #74bef8;
+  color: #244186;
+}
+@keyframes card-in {
+  0% { opacity: 0; transform: translateY(14px) scale(0.97);}
+  100% { opacity: 1; transform: translateY(0) scale(1);}
+}
+@media (max-width: 950px) {
+  .manager-main-box { padding: 1.2rem 0.5rem; max-width: 99vw; border-radius: 15px; }
+  .manager-form-simple { gap: 1.3rem;}
+  .select-row { flex-direction: column; gap: 1.1em;}
+  .manager-glass-select { width: 99vw; min-width: 160px;}
+}
+.primary-button {
+  width: 280px;
+  max-width: 96vw;
+  margin: 2.2rem auto 0 auto;
+  padding: 0.82rem 1rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  border-radius: 999px;
+}
+@media (max-width: 700px) {
+  .primary-button { font-size: 1em; padding: 0.78rem 0; width: 96vw; }
+}

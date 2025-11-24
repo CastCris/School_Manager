@@ -1,26 +1,40 @@
 {% extends "default/layout_1.html" %}
 {% block page_style %}
 <link rel="stylesheet" href="{{ url_for('static', filename='style/pages/home.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='style/pages/manager.css') }}">
 {% endblock %}
 {% block content_main %}
 <div class="home-page">
-  <div class="home-card">
+  <div class="manager-main-box">
     <form id="manager_form_crud" class="manager-form-simple">
-      <select name="entity_name" id="manager_select_entityName" class="glass-select">
-        {% if "PERMISSION_MANAGER_PERSON" in permissions %}<option value="Person">Person</option>{% endif %}
-        {% if "PERMISSION_MANAGER_REGISTER" in permissions %}<option value="Register">Register</option>{% endif %}
-        {% if "PERMISSION_MANAGER_LOCALWORK" in permissions %}<option value="LocalWork">LocalWork</option>{% endif %}
-        {% if "PERMISSION_MANAGER_DEPARTAMENT" in permissions %}<option value="Departament">Departament</option>{% endif %}
-        {% if "PERMISSION_MANAGER_TASK" in permissions %}<option value="Task">Task</option>{% endif %}
-      </select>
-      <select name="crud_operation" id="manager_select_crudOperation" class="glass-select">
-        <option value="create">Create</option>
-        <option value="delete">Delete</option>
-        <option value="update">Update</option>
-        <option value="select">Select</option>
-      </select>
-      <div class="manager-fields" id="manager_box_entity"></div>
-      <button id="manager_button_form_crud_submit" type="submit" class="primary-button">Submit</button>
+      <div class="select-row">
+        <select name="entity_name" class="manager-glass-select">
+          <option value="Person">Person</option>
+          <option value="Register">Register</option>
+          <option value="LocalWork">LocalWork</option>
+          <option value="Departament">Departament</option>
+          <option value="Task">Task</option>
+        </select>
+        <select name="crud_operation" class="manager-glass-select">
+          <option value="create">Create</option>
+          <option value="delete">Delete</option>
+          <option value="update">Update</option>
+          <option value="select">Select</option>
+        </select>
+      </div>
+      <div class="manager-fields">
+        <label for="registerId">registerId</label>
+        <input type="text" id="registerId" name="registerId" class="manager-glass-input">
+        <label for="password">password</label>
+        <input type="password" id="password" name="password" class="manager-glass-input">
+        <label for="id">id</label>
+        <input type="text" id="id" name="id" class="manager-glass-input">
+        <label for="permissions">permissions</label>
+        <input type="text" id="permissions" name="permissions" class="manager-glass-input">
+        <label for="name">name</label>
+        <input type="text" id="name" name="name" class="manager-glass-input">
+      </div>
+      <input type="submit" value="SUBMIT" class="primary-button"></button>
     </form>
   </div>
 </div>

@@ -2,10 +2,14 @@ const btn = document.getElementById('theme-toggle');
 const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
 function updateButton() {
     if(document.body.classList.contains('light-mode')) {
-        btn.innerHTML = '<svg width="21" height="21" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" fill="#0af"/><path d="M6.5 8c0-2.21 1.79-4 4-4 .26 0 .51.02.76.07A6.001 6.001 0 014.07 13.24c.05-.25.07-.5.07-.76 0-2.21 1.79-4 4-4z" fill="#fff"/></svg>';
+        btn.innerHTML =
+            '<svg width="21" height="21" viewBox="0 0 18 18" fill="none">' +
+            '<path d="M14.2 11.35A6 6 0 0 1 6.62 3.52a.5.5 0 0 0-.63-.62A7 7 0 1 0 14.7 12a.5.5 0 0 0-.5-.65z" fill="#a2c3f6"/>' +
+            '</svg>';
+
         btn.title = "Modo Escuro";
     } else {
-        btn.innerHTML = '<svg width="21" height="21" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" fill="#ffe600"/><path d="M9 4v2M9 12v2M4 9H6M12 9h2" stroke="#f59e00" stroke-width="2" stroke-linecap="round"/><circle cx="9" cy="9" r="5" fill="#fffae0" /></svg>';
+        btn.innerHTML = '<svg width="21" height="21" viewBox="0 0 18 18" fill="none"><rcle cx="9" cy="9" r="8" fill="#f3f7fbfb"/><path d="M9 4v2M9 12v2M4 9H6M12 9h2" stroke="#b2cefa" stroke-width="2" stroke-linecap="round"/>ircle cx="9" cy="9" r="5" fill="#fffff" /></svg>';
         btn.title = "Modo Claro";
     }
 }

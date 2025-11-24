@@ -1,8 +1,10 @@
 {% extends "default/layout_2.html" %}
 
 {% block page_style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='style/pages/home.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='style/pages/login.css') }}">
 {% endblock %}
+
 
 {% block title %}Login{% endblock %}
 

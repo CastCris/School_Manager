@@ -8,7 +8,6 @@ body.light-mode {
   background: radial-gradient(circle at top left, #e6eefc 0%, #dbeafe 60%, #fafdff 100%);
   color: #222f3d;
 }
-
 .app-header {
   position: fixed;
   top: 0; left: 0; width: 100vw;
@@ -54,14 +53,37 @@ h1 {
 }
 body.light-mode .user-welcome { color: #6b7280; }
 .logout-link {
-  color: #67e8f9;
+  background: rgba(53, 60, 110, 0.22);
+  color: #f1f5fa;
+  font-weight: 500;
+  border-radius: 999px;
+  padding: 0.44em 1.12em;
+  margin-left: .55em;
+  border: 1.2px solid rgba(125,135,185,0.22);
+  box-shadow: 0 1px 10px rgb(64 102 167 / 11%);
   text-decoration: none;
-  font-size: 1.08em;
+  font-size: 1.03em;
   letter-spacing: 0.03em;
-  margin-left: .4em;
-  transition: color .15s;
+  transition: background 180ms, color 120ms, box-shadow 140ms;
+  display: inline-block;
 }
-.logout-link:hover { color: #10b981; }
+.logout-link:hover {
+  background: linear-gradient(120deg, #5267d9 10%, #95e5fb 95%);
+  color: #fff;
+  border: 1.2px solid #67e8f9;
+  box-shadow: 0 2px 14px rgb(64 102 167 / 23%);
+}
+body.light-mode .logout-link {
+  background: #dbeafe;
+  color: #262e62;
+  border: 1.2px solid #b6cef9;
+}
+body.light-mode .logout-link:hover {
+  background: linear-gradient(120deg, #60a5fa 0%, #bae6fd 85%);
+  color: #1643a2;
+  border: 1.2px solid #71abfa;
+  box-shadow: 0 2px 14px #b6cef9;
+}
 #theme-toggle {
   font-size: 1.56em;
   background: linear-gradient(120deg,rgba(139,92,246,0.14),rgba(45,212,191,0.17));
