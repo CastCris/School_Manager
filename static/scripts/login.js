@@ -1,7 +1,31 @@
 import * as global from './globals.js'
 
 //
-const login = new global.Login();
+class Login extends global.Page{
+    constructor(){
+        super();
+
+        this.FORM_CREDENTIALS = new global.Element({
+            id:"login_form_credentials"
+        });
+        this.FORM_CAPTCHA = new global.Element({
+            id:"login_form_captcha"
+        });
+
+        //
+        this.IMG_CAPTCHA = new global.Element({
+            id:"login_image_captcha"
+        });
+        this.BUTT_CAPTCHA_GET = new global.Element({
+            id:"login_image_captcha_get"
+        });
+        this.BUTT_FORM_FINISH = new global.Element({
+            id:"login_form_finish"
+        });
+    }
+}
+
+const login = new Login();
 const logs = new global.MessageLogs();
 
 //
