@@ -195,7 +195,7 @@ export class Element {
             return;
 
         for(const i of this.EVENT_LISTENERS){
-            console.log(this.OBJECT, i.TYPE, i.FUNC);
+            // console.log(this.OBJECT, i.TYPE, i.FUNC);
             this.OBJECT.addEventListener(i.TYPE, i.FUNC);
         }
     }

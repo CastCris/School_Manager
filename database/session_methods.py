@@ -294,6 +294,7 @@ def model_unwrap(instance:object)->dict|None:
 
         return None
 
+
 def model_get_columns(instance:object)->tuple:
     model = inspect(instance).mapper.class_
     columns = [ i for i in model.__table__.columns]
@@ -328,3 +329,42 @@ def model_get_columns_name(instance:object)->tuple:
         columns_name_set.add(attr_name)
 
     return tuple(columns_name)
+
+def model_get_columns_type(instance:object)->dict:
+    model = inspect(instance)
+    columns = model_get_columns(instance)
+    
+    columns_type = {}
+    columns_type_set = set()
+
+    for i in columns:
+        name, python_type = i.name, i.type.python_type
+        attr_name = name
+
+        if name.startswith('cipher_'):
+            _, attr_name = name.split('cipher_')
+
+        if name.startswith('hashed_'):
+            _, attr_name = name.split('hashed_')
+
+        if attr_name in columns_type_set:
+            continue
+        
+        columns_type[attr_name] = python_type
+        columns_type_set.add(attr_name)
+
+    return columns_type
+
+##
+def get_model(model_name:str)->object|None:
+    from .session import Base, metadata
+
+    ##
+    table = metadata.tables[model_name]
+    # print('table: ', table, type(table))
+
+    for i in Base.registry.mappers:
+        if i.local_table.name == table.name:
+            return i.class_
+
+    return None

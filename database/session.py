@@ -70,6 +70,7 @@ def sqlite_database_create(engine:object)->object:
 
 def sqlite_init()->None:
     global engine
+    global metadata
 
     global Base
     global session
@@ -83,8 +84,11 @@ def sqlite_init()->None:
     Session = sessionmaker(bind=engine)
     session = Session()
 
+    metadata = MetaData()
+    metadata.reflect(bind=engine)
+
 ##
-engine = Base = session = None
+engine = metadata = Base = session = None
 
 # mariadb_init()
 sqlite_init()

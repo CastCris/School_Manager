@@ -69,7 +69,7 @@ export class Manager extends global.Page{
             var field_names_option = '';
             for(const i of this.ENTITY_FIELD){
                 field_names_option += `
-                    <option value="${i.toLowerCase}">${i}</option>
+                    <option value="${i.toLowerCase()}">${i}</option>
                     <br>
                 `;
             }
@@ -97,7 +97,7 @@ export class Manager extends global.Page{
                 <option value="!="> != </option>
             </select>
 
-            <input type="text" name="constraint_value" placeholder="Enter with constraint value">
+            <input type="text" name="constraint_value" placeholder="Enter with constraint value" required>
             `;
 
             return {
@@ -148,7 +148,7 @@ export class Manager extends global.Page{
             body: JSON.stringify(json)
         });
         const data = await response.json();
-        console.log(data);
+        // console.log(data);
 
         //
         const logs = new global.MessageLogs();
@@ -252,7 +252,38 @@ manager.BUTT_FORM_CRUD_SUBMIT.addEventListener('click', (e) => {
     e.preventDefault();
 
     //
-    console.log('submited forms!');
+    const formData = global.forms_validation(manager.FORM_CRUD.get_object());
+    if(!formData)
+        return;
+
+    const formData_json = {
+        "entity_name": formData.get("entity_name"),
+        "crud_operation": formData.get("crud_operation"),
+
+        "crud_data": {}
+    };
+    formData.delete("entity_name");
+    formData.delete("crud_operation");
+
+    for(const i of formData.entries()){
+        const field_name = i[0];
+        const field_value = i[1];;
+
+        formData_json["crud_data"][field_name] = formData_json["crud_data"][field_name] || [];
+        formData_json["crud_data"][field_name].push(field_value);
+    }
+
+    console.log(formData_json, JSON.stringify(formData_json));
+    fetch('/auth/manager/CRUD', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json; charset=utf-8'},
+
+        body: JSON.stringify(formData_json),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+    });
 });
 
 

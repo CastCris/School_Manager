@@ -37,9 +37,38 @@
         <option value="select">Select</option>
     </select>
 
-    <div class="crud_constraint" id="manager_box_crudConstraint"></div>
+    <div class="crud_constraint" id="manager_box_crudConstraint">
+        <!--
+        <select name="select_constraint">
+            <option value="where">Where</option>
+        </select>
 
-    <div class="entity_field" id="manager_box_entity"></div>
+        <select name="select_constraint_entityField">
+            ${field_names_option}
+        </select>
+
+        <select name="select_contraint_operator">
+            <option value=">"> > </otpion>
+            <option value="<"> < </otpion>
+
+            <option value=">="> >= </option>
+            <option value="<="> <= </option>
+
+            <option value="=="> == </option>
+            <option value="!="> != </option>
+        </select>
+
+        <input type="text" name="constraint_value" placeholder="Enter with constraint value" required>
+        -->
+    </div>
+
+    <div class="entity_field" id="manager_box_entity">
+        <!--
+        <label>${i}</label>
+        <input type="text" name="entity_field_${i}">
+        <br>
+        -->
+    </div>
 
     <button id="manager_button_form_crud_submit">Submit</button>
 </form>
