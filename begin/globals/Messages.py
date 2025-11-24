@@ -70,7 +70,18 @@ class Login():
 class Manager():
     class Error(Error):
         invalid_entity = "This entity doesn't exists"
+
+        invalid_column_name = "Invalid column name"
+        invalid_data_type_for_column = lambda column_name: f"Invalid data type for column {column_name}"
+        invalid_column_count = "Invalid column count for selected crud operation"
+
+        invalid_constraint = "Invalid constraint"
+        invalid_data_type_for_constraint_value = "Invalid data type for constraint "
+
         not_permissions_enough_to_manage_entity = "You don't have permissions enough to manage this entity"
+
+    class Success(Success):
+        ok_operation = lambda operation_name: f"Operation {operation_name} completed sucessfully!"
 
     class Request(Request):
         pass

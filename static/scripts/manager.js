@@ -86,15 +86,15 @@ export class Manager extends global.Page{
                 ${field_names_option}
             </select>
 
-            <select name="select_contraint_operator">
-                <option value=">"> > </otpion>
-                <option value="<"> < </otpion>
-
-                <option value=">="> >= </option>
-                <option value="<="> <= </option>
-
+            <select name="select_constraint_operator">
                 <option value="=="> == </option>
                 <option value="!="> != </option>
+
+                <option value=">"> > </otpion>
+                <option value=">="> >= </option>
+
+                <option value="<"> < </otpion>
+                <option value="<="> <= </option>
             </select>
 
             <input type="text" name="constraint_value" placeholder="Enter with constraint value" required>
@@ -180,10 +180,11 @@ export class Manager extends global.Page{
             return;
 
 
+        const required = crud_operation == 'create'? "required" : "";
         for(const i of this.ENTITY_FIELD){
             this.BOX_ENTITY_FIELD.set("innerHTML", this.BOX_ENTITY_FIELD.get("innerHTML") + `
                 <label>${i}</label>
-                <input type="text" name="entity_field_${i}">
+                <input type="text" name="entity_field_${i}" ${required}>
                 <br>
             `);
         }
@@ -194,7 +195,7 @@ export class Manager extends global.Page{
         const crud_operation = this.SLCT_CRUD_OPERATION.get("value").toLowerCase();
         this.BOX_CRUD_CONSTRAINT.set("innerHTML", '');
 
-        if(crud_operation == 'create' || crud_operation == 'update')
+        if(crud_operation == 'create')
             return;
 
         const button_add = this.NODE_BUTT_CRUD_CONSTRAINT_ADD();
@@ -260,19 +261,13 @@ manager.BUTT_FORM_CRUD_SUBMIT.addEventListener('click', (e) => {
         "entity_name": formData.get("entity_name"),
         "crud_operation": formData.get("crud_operation"),
 
-        "crud_data": {}
+        "crud_data": {
+            "entity_fields": global.fieldSetData(manager.BOX_ENTITY_FIELD.get_object()),
+            "crud_constraint": global.fieldSetData(manager.BOX_CRUD_CONSTRAINT.get_object())
+        }
     };
-    formData.delete("entity_name");
-    formData.delete("crud_operation");
 
-    for(const i of formData.entries()){
-        const field_name = i[0];
-        const field_value = i[1];;
-
-        formData_json["crud_data"][field_name] = formData_json["crud_data"][field_name] || [];
-        formData_json["crud_data"][field_name].push(field_value);
-    }
-
+    console.log(formData_json);
     console.log(formData_json, JSON.stringify(formData_json));
     fetch('/auth/manager/CRUD', {
         method: 'POST',
@@ -282,6 +277,9 @@ manager.BUTT_FORM_CRUD_SUBMIT.addEventListener('click', (e) => {
     })
     .then(response => response.json())
     .then(data => {
+        const message = data["message"];
+        const result = data["result"];
+
         console.log(data);
     });
 });

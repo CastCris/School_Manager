@@ -24,6 +24,17 @@ op_comp = {
     'in': lambda column, value: column.in_(value)
 }
 
+op_comp_by_operator = {
+    '<': '__lt',
+    '<=': '__lte',
+
+    '>': '__gt',
+    '>=': '__gte',
+
+    '==': '',
+    '!=': '__ne'
+}
+
 ##
 def session_insert(model:object, **kwargs)->object:
     try:
@@ -354,6 +365,28 @@ def model_get_columns_type(instance:object)->dict:
         columns_type_set.add(attr_name)
 
     return columns_type
+
+def model_get_columns_value(instance:object)->dict:
+    mapper = inspect(instance).mapper
+    columns_value = {}
+
+    field_hashed = FIELD_HASHED(type(instance))
+    field_cipher = FIELD_CIPHER(type(instance))
+
+    for i in mapper.columns:
+        name = i.key
+        if name in field_hashed:
+            continue
+
+        attr_name = name
+        if name.startswith('cipher_'):
+            _, attr_name = name.split('cipher_')
+        
+        value = model_get(instance, name)
+
+        columns_value[attr_name] = value
+
+    return columns_value
 
 ##
 def get_model(model_name:str)->object|None:

@@ -34,6 +34,21 @@ export function forms_validation(...forms){
     return formData;
 }
 
+export function fieldSetData(...fieldSet){
+    const data = {};
+    for(const i of fieldSet){
+        const inputs = i.querySelectorAll('input, select, textarea');
+
+        for(const j of inputs){
+            data[j.name] = data[j.name] || []
+            data[j.name].push(j.value);
+        }
+    }
+
+    return data;
+}
+
+
 export function captchaIMG_generate(img){
     fetch('/captcha/generate/img')
     .then(response => response.blob())

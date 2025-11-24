@@ -37,7 +37,15 @@
         <option value="select">Select</option>
     </select>
 
-    <div class="crud_constraint" id="manager_box_crudConstraint">
+    <fieldset class="entity_field" id="manager_box_entity">
+        <!--
+        <label>${i}</label>
+        <input type="text" name="entity_field_${i}">
+        <br>
+        -->
+    </fieldset>
+
+    <fieldset class="crud_constraint" id="manager_box_crudConstraint">
         <!--
         <select name="select_constraint">
             <option value="where">Where</option>
@@ -60,16 +68,10 @@
 
         <input type="text" name="constraint_value" placeholder="Enter with constraint value" required>
         -->
-    </div>
-
-    <div class="entity_field" id="manager_box_entity">
-        <!--
-        <label>${i}</label>
-        <input type="text" name="entity_field_${i}">
-        <br>
-        -->
-    </div>
+    </fieldset>
 
     <button id="manager_button_form_crud_submit">Submit</button>
 </form>
+
+<div id="select_output"></div>
 {% endblock %}
