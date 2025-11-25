@@ -5,6 +5,9 @@
 !README.md
 !requirements.txt
 
+!dockerfile
+!.dockerignore
+
 #
 !/database/**/*.sql
 !/database/**/*.brM3

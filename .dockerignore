@@ -1,0 +1,11 @@
+*
+!*/
+
+!**/*.py
+
+!/database/casts/**/*.sql
+
+!/templates/**/*.html
+!/static/fonts/**/*.ttf
+!/static/style/**/*.css
+!/static/scripts/**/*.js

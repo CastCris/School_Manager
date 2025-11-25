@@ -24,7 +24,7 @@ def register(path:str=PATH_INIT, app:object=None)->None:
             register(file_path, app)
             continue
 
-        if not re.search("^router_.*\.py$", file_path):
+        if not re.search("/router_.*\.py$", file_path):
             continue
 
         spec = importlib.util.spec_from_file_location(file_name, file_path)
