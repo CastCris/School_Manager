@@ -1,9 +1,11 @@
 *
+
 !*/
 
 !*.py
 !README.md
 !requirements.txt
+
 
 !dockerfile
 !.dockerignore
@@ -17,3 +19,5 @@
 !/static/style/**/*.css
 
 !/templates/**/*.html
+
+.venv
