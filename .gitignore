@@ -9,6 +9,7 @@
 
 !dockerfile
 !.dockerignore
+!docker-compose.yml
 
 #
 !/database/**/*.sql

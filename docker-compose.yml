@@ -1,0 +1,76 @@
+version: '3'
+
+services:
+
+  app:
+    build: .
+    container_name: "schoolmanager"
+    working_dir: /app
+
+    develop:
+      watch:
+        - action: rebuild
+          path: .
+          target: .
+          ignore:
+            - "templates/"
+            - "static/"
+        
+        - action: sync+restart
+          path: requirements.txt
+          target: .
+
+        - action: sync
+          path: templates/
+          target: .
+
+        - action: sync
+          path: static
+          target: .
+
+    volumes:
+      - .:/app
+
+    ports:
+      - "5000:5000"
+
+    depends_on:
+      - mariadb
+    
+    environment:
+      PYTHONUNBUFFERED: 1
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_USER: school
+      MYSQL_DATABASE: schoolDB
+      MYSQL_PASSWORD: admin
+
+    networks:
+      - backend
+
+  mariadb:
+    image: mariadb:latest
+    container_name: "mariadb"
+
+    restart: always
+
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_USER: school
+      MYSQL_DATABASE: schoolDB
+      MYSQL_PASSWORD: admin
+
+    volumes:
+      - mariadb_data:/var/lib/mysql
+
+    ports:
+      - "5467:5467"
+    
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  mariadb_data:

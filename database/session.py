@@ -1,3 +1,4 @@
+import sqlalchemy
 from sqlalchemy import create_engine, text, MetaData
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.automap import automap_base
@@ -8,6 +9,7 @@ from begin.globals import Messages
 from .methods.crypt import *
 
 import re
+import time
 
 ##
 def mariadb_database_drop(engine:object)->None:
@@ -31,13 +33,24 @@ def mariadb_database_create(engine:object)->object:
     return Base
 
 def mariadb_init()->None:
+    import os
+
+    ##
     global engine
 
     global Base
     global session
 
     #
-    engine = create_engine('mariadb://school:@localhost/schoolDB', echo=True)
+    MARIADB_HOST = os.getenv('MYSQL_HOST', 'mariadb')
+    MARIADB_USER = os.getenv('MYSQL_USER', 'school')
+    MARIADB_PASSWORD = os.getenv('MYSQL_PASSWORD', 'admin')
+    MARIADB_DATABASE = os.getenv('MYSQL_DATABASE', 'schoolDB')
+
+    url = f"mariadb://{MARIADB_USER}:{MARIADB_PASSWORD}@{MARIADB_HOST}/{MARIADB_DATABASE}"
+    print(url)
+
+    engine = create_engine(url, echo=True)
 
     mariadb_database_drop(engine)
     Base = mariadb_database_create(engine)
@@ -91,4 +104,12 @@ def sqlite_init()->None:
 engine = metadata = Base = session = None
 
 # mariadb_init()
-sqlite_init()
+
+for _ in range(10):
+    try:
+        mariadb_init()
+
+    except sqlalchemy.exec.OperationError:
+        print('Try connect to database again')
+        time.sleep(2)
+    # sqlite_init()
