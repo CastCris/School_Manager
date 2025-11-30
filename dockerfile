@@ -1,5 +1,6 @@
 FROM python:3.13.1
 LABEL maintainer="CastCris author"
+RUN useradd -ms /bin/sh -u 1001 app
 
 USER app
 

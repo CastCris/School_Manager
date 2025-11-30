@@ -100,16 +100,21 @@ def sqlite_init()->None:
     metadata = MetaData()
     metadata.reflect(bind=engine)
 
+
+def session_init(dbms_name:str)->None:
+    for _ in range(10):
+        try:
+            if dbms_name == 'mariadb':
+                mariadb_init()
+
+            if dbms_name == 'sqlite':
+                sqlite_init()
+
+        except sqlalchemy.exc.OperationalError:
+            print('Try connect to database again')
+            time.sleep(2)
+
 ##
 engine = metadata = Base = session = None
 
-# mariadb_init()
-
-for _ in range(10):
-    try:
-        mariadb_init()
-
-    except sqlalchemy.exec.OperationError:
-        print('Try connect to database again')
-        time.sleep(2)
-    # sqlite_init()
+session_init('mariadb')
